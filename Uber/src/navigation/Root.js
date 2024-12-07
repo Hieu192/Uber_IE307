@@ -1,6 +1,5 @@
 import React from "react";
 import {View, Text} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeNavigator from "./Home";
@@ -16,7 +15,7 @@ const DummyScreen = (props) => (
 
 const RootNavigator = (props) => {
   return (
-    <NavigationContainer>
+    <>
       <Drawer.Navigator drawerContent={
         (props) => (
           <CustomDrawer {...props} />)
@@ -40,7 +39,7 @@ const RootNavigator = (props) => {
         </Drawer.Screen>
 
       </Drawer.Navigator>
-    </NavigationContainer>
+    </>
   );
 };
 

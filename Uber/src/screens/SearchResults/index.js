@@ -3,7 +3,7 @@ import {View, Dimensions, Alert} from 'react-native';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import RouteMap from "../../components/RouteMap";
 import UberTypes from "../../components/UberTypes";
-import { createOrder } from '../../graphql/mutations';
+// import { createOrder } from '../../graphql/mutations';
 
 import { useRoute, useNavigation } from '@react-navigation/native';
 
@@ -40,13 +40,13 @@ const SearchResults = (props) => {
         status: "NEW",
       }
 
-      const response = await API.graphql(
-        graphqlOperation(
-          createOrder, {
-            input: input
-          },
-        )
-      )
+      // const response = await API.graphql(
+      //   graphqlOperation(
+      //     createOrder, {
+      //       input: input
+      //     },
+      //   )
+      // )
 
       console.log(response);
 

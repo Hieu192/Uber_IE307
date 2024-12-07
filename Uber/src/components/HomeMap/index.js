@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Image } from "react-native";
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import {API, graphqlOperation} from 'aws-amplify';
-import { listCars } from '../../graphql/queries';
+
+
 
 // import cars from '../../assets/data/cars';
 
@@ -12,13 +12,13 @@ const HomeMap = (props) => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await API.graphql(
-          graphqlOperation(
-            listCars
-          )
-        )
+        // const response = await API.graphql(
+        //   graphqlOperation(
+        //     listCars
+        //   )
+        // )
 
-        setCars(response.data.listCars.items);
+       // setCars(response.data.listCars.items);
       } catch (e) {
         console.error(e);
       }

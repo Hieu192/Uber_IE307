@@ -1,15 +1,11 @@
+import  './firebaseConfig';  
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {StatusBar, Platform} from 'react-native';
 import * as Location from 'expo-location'; // Sử dụng thư viện Expo Location
-import {withAuthenticator} from 'aws-amplify-react-native';
-import {Amplify} from 'aws-amplify';
-import config from './aws-exports';
 import Router from './src/navigation/Root';
-
-// Cấu hình AWS Amplify
-Amplify.configure(config);
-
+import AuthStack from "./src/navigation/AuthStack"
+import { NavigationContainer } from '@react-navigation/native';
 const App = () => {
   // Yêu cầu quyền truy cập vị trí
   const requestLocationPermission = async () => {
@@ -37,11 +33,11 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <NavigationContainer>
       <StatusBar barStyle="dark-content" />
-      <Router />
-    </>
+      <AuthStack />
+    </NavigationContainer>
   );
 };
 
-export default withAuthenticator(App);
+export default App;

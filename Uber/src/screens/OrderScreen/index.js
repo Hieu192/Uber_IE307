@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { View, Dimensions, Text } from "react-native";
 import OrderMap from "../../components/OrderMap";
 import { useRoute } from '@react-navigation/native';
-import { API, graphqlOperation } from 'aws-amplify';
-import { getOrder, getCar } from '../../graphql/queries';
 import { onOrderUpdated, onCarUpdated } from './subscriptions';
 
 const OrderScreen = (props) => {
@@ -17,10 +15,10 @@ const OrderScreen = (props) => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const orderData = await API.graphql(
-          graphqlOperation(getOrder, { id: route.params.id })
-        );
-        setOrder(orderData.data.getOrder);
+        // const orderData = await API.graphql(
+        //   graphqlOperation(getOrder, { id: route.params.id })
+        // );
+        //setOrder(orderData.data.getOrder);
       } catch (e) {
 
       }
@@ -30,14 +28,14 @@ const OrderScreen = (props) => {
 
   // Subscribe to order updates
   useEffect(() => {
-    const subscription = API.graphql(
-      graphqlOperation(onOrderUpdated, { id: route.params.id })
-    ).subscribe({
-      next: ({ value }) => setOrder(value.data.onOrderUpdated),
-      error: error => console.warn(error)
-    })
+    // const subscription = API.graphql(
+    //   graphqlOperation(onOrderUpdated, { id: route.params.id })
+    // ).subscribe({
+    //   next: ({ value }) => setOrder(value.data.onOrderUpdated),
+    //   error: error => console.warn(error)
+    // })
 
-    return () => subscription.unsubscribe();
+    // return () => subscription.unsubscribe();
   }, [])
 
   // Fetch Car data when order is updated
@@ -48,11 +46,11 @@ const OrderScreen = (props) => {
 
     const fetchCar = async () => {
       try {
-        const carData = await API.graphql(
-          graphqlOperation(getCar, { id: order.carId })
-        );
-        console.log(carData);
-        setCar(carData.data.getCar);
+        // const carData = await API.graphql(
+        //   graphqlOperation(getCar, { id: order.carId })
+        // );
+        // console.log(carData);
+        // setCar(carData.data.getCar);
       } catch (e) {
 
       }
@@ -61,20 +59,20 @@ const OrderScreen = (props) => {
   }, [order])
 
   // Subscribe to car updates
-  useEffect(() => {
-    if (!order?.carId || order.carId === '1') {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!order?.carId || order.carId === '1') {
+  //     return;
+  //   }
 
-    const subscription = API.graphql(
-      graphqlOperation(onCarUpdated, { id: order.carId })
-    ).subscribe({
-      next: ({ value }) => setCar(value.data.onCarUpdated),
-      error: error => console.warn(error)
-    })
+  //   const subscription = API.graphql(
+  //     graphqlOperation(onCarUpdated, { id: order.carId })
+  //   ).subscribe({
+  //     next: ({ value }) => setCar(value.data.onCarUpdated),
+  //     error: error => console.warn(error)
+  //   })
 
-    return () => subscription.unsubscribe();
-  }, [order])
+  //   return () => subscription.unsubscribe();
+  // }, [order])
 
   return (
     <View>
