@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { View, TextInput, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axiosInstance from "../../utils/axios";
@@ -15,6 +15,8 @@ const workPlace = {
 };
 
 const DestinationSearch = (props) => {
+  const inputOriginRef = useRef(null);
+  const inputDestinationRef = useRef(null);
   const [originPlace, setOriginPlace] = useState({});
   const [destinationPlace, setDestinationPlace] = useState({});
   const [isStartSuggestion, setIsStartSuggestion] = useState(false);
@@ -51,6 +53,7 @@ const DestinationSearch = (props) => {
   };
   const handleChangeInput = async (value, type) => {
     try {
+      if(!value)return 1;
       const { data } = await axiosInstance.get("/Place/AutoComplete", {
         params: {
           input: value,
@@ -72,9 +75,11 @@ const DestinationSearch = (props) => {
     if (type === "origin") {
       setOriginPlace({ place_id: place.place_id, value: place.description });
       setIsStartSuggestion(true);
+      inputDestinationRef.current.focus()
     } else {
       setDestinationPlace(place);
       setIsEndSuggestion(true);
+      inputOriginRef.current.focus()
     }
   };
   const getCurrentLocation = async () => {
@@ -91,6 +96,7 @@ const DestinationSearch = (props) => {
     <SafeAreaView>
       <View style={styles.container}>
         <TextInput
+        ref={inputOriginRef}
           style={styles.input}
           placeholder="Chọn điểm đón"
           onChangeText={(value) => {
@@ -108,6 +114,7 @@ const DestinationSearch = (props) => {
           underlineColorAndroid="transparent"
         />
         <TextInput
+          ref={inputDestinationRef}
           style={styles.input}
           placeholder="Chọn điểm đến"
           onChangeText={(value) => {
