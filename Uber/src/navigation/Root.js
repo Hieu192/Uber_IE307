@@ -2,7 +2,7 @@ import React from "react";
 import {View, Text} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import HomeNavigator from "./Home";
+import HomeStack from "./HomeStack";
 import CustomDrawer from "./CustomDrawer";
 
 const Drawer = createDrawerNavigator();
@@ -20,7 +20,7 @@ const RootNavigator = (props) => {
         (props) => (
           <CustomDrawer {...props} />)
       }>
-        <Drawer.Screen name="Home" component={HomeNavigator} />
+        <Drawer.Screen name="Home" component={HomeStack} />
 
         <Drawer.Screen name="Your Trips">
            {() => <DummyScreen name={"Your Trips"} />}

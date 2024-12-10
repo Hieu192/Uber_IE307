@@ -69,14 +69,12 @@ export default function SignUpScreen({ navigation }) {
         email,
         password
       );
-
-      // Signed up
       Alert.alert("Đăng ký thành công", "Tài khoản đã được tạo thành công!");
-      setIsLoading(false);
-      const user = userCredential.user;
+       setIsLoading(false);
+     const user = userCredential.user;
 
       // Chuyển đến màn hình đăng nhập (hoặc trang chính)
-      navigation.navigate("SignIn"); // Điều hướng tới trang đăng nhập (có thể thay đổi theo ý muốn)
+      navigation.navigate("Login"); // Điều hướng tới trang đăng nhập (có thể thay đổi theo ý muốn)
     } catch (error) {
       setIsLoading(false);
       Alert.alert("Đăng ký thất bại", error.message);

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import {View, Dimensions, Alert} from 'react-native';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
 import RouteMap from "../../components/RouteMap";
 import UberTypes from "../../components/UberTypes";
 // import { createOrder } from '../../graphql/mutations';
-
+import theme from "../../theme"
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 const SearchResults = (props) => {
@@ -23,8 +22,6 @@ const SearchResults = (props) => {
 
     // submit to server
     try {
-      const userInfo = await Auth.currentAuthenticatedUser();
-
       const date = new Date();
       const input = {
         createdAt: date.toISOString(),
