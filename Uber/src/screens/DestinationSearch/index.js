@@ -59,10 +59,10 @@ const DestinationSearch = (props) => {
       });
       if (type === "origin") {
         setIsStartSuggestion(false);
-        setSuggestOriginLocation(data.predictions);
+        setSuggestOriginLocation(data.predictions||[]);
       } else {
-        setIsEndSuggestion(false);
-        setSuggestDestinationLocation(data.predictions);
+        setIsEndSuggestion(false); 
+        setSuggestDestinationLocation(data.predictions||[]);
       }
     } catch (error) {
       console.log(error);
@@ -126,7 +126,7 @@ const DestinationSearch = (props) => {
         />
         {visible === "origin" && (
           <View style={styles.listView}>
-            {suggestOriginLocation.map((place, index) => (
+            {suggestOriginLocation?.map((place, index) => (
               <PlaceRow
                 key={index}
                 data={place}
@@ -138,7 +138,7 @@ const DestinationSearch = (props) => {
         )}
         {visible === "destination" && (
           <View style={styles.listView}>
-            {suggestDestinationLocation.map((place, index) => (
+            {suggestDestinationLocation?.map((place, index) => (
               <PlaceRow
                 key={index}
                 data={place}
