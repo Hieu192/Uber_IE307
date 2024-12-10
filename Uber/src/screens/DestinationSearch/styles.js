@@ -16,10 +16,6 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     backgroundColor: '#fff',
   },
-  separator: {
-    backgroundColor: '#efefef',
-    height: 1,
-  },
   listView: {
     margin: 16,
     marginTop: 40,
@@ -81,6 +77,24 @@ const styles = StyleSheet.create({
     left: 15,
     borderRadius: 15,
   },
+  rowButton: {
+    width: '90%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+
+  button: {
+    // backgroundColor: '#4CAF50',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 16,
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  selectButton: {
+    backgroundColor: '#4CAF50',
+  }
 });
 
 export default styles;

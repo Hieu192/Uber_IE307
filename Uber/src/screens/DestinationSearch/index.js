@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useRef } from "react";
-import { View, TextInput, SafeAreaView } from "react-native";
+import { View, TextInput, SafeAreaView, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axiosInstance from "../../utils/axios";
 import styles from "./styles.js";
@@ -22,11 +22,10 @@ const DestinationSearch = (props) => {
   const [isStartSuggestion, setIsStartSuggestion] = useState(false);
   const [isEndSuggestion, setIsEndSuggestion] = useState(false);
   const [suggestOriginLocation, setSuggestOriginLocation] = useState([]);
-  const [suggestDestinationLocation, setSuggestDestinationLocation] = useState(
-    []
-  );
+  const [suggestDestinationLocation, setSuggestDestinationLocation] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [visible, setVisible] = useState("");
+  const [selectButton, setSelectButton] = useState(1);
   const navigation = useNavigation();
   //  console.log("Toa do hien tai la",currentLocation)
   const checkNavigation = () => {
@@ -37,7 +36,11 @@ const DestinationSearch = (props) => {
       });
     }
   };
+  const handleSelectButton = (id) => {
+    setSelectButton(id);
+  }
   const handleFocus = (type) => {
+    console.log("type", type);
     if (type === "origin" && isStartSuggestion) {
       setVisible("origin");
       setOriginPlace("");
@@ -131,6 +134,23 @@ const DestinationSearch = (props) => {
           returnKeyType="search"
           underlineColorAndroid="transparent"
         />
+        {(visible !== "origin" && visible !== "destination") && (<View style={styles.rowButton}>
+          <TouchableOpacity onPress={() => handleSelectButton(1)}>
+              <Text style={[
+                styles.button,
+                selectButton === 1 && styles.selectButton]}>Gần đây</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleSelectButton(2)}>
+              <Text style={[
+                styles.button,
+                selectButton === 2 && styles.selectButton]}>Đề nghị trước đó</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleSelectButton(3)}>
+            <Text style={[
+                styles.button,
+                selectButton === 3 && styles.selectButton]}>Đã lưu</Text>
+          </TouchableOpacity>
+        </View>)}
         {visible === "origin" && (
           <View style={styles.listView}>
             {suggestOriginLocation?.map((place, index) => (
