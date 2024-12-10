@@ -2,23 +2,29 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    padding: 16,
     height: '100%',
   },
-  textInput: {
-    padding: 10,
-    backgroundColor: '#eee',
-    marginVertical: 5,
-    marginLeft: 20,
+  input: {
+    width: '85%',
+    height: 45,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 16,
+    marginLeft: 30,
+    paddingLeft: 16,
+    backgroundColor: '#fff',
   },
-
   separator: {
     backgroundColor: '#efefef',
     height: 1,
   },
   listView: {
+    margin: 16,
+    marginTop: 40,
     position: 'absolute',
-      top: 105,
+    top: 105,
   },
   autocompleteContainer: {
     position: 'absolute',
@@ -28,9 +34,10 @@ const styles = StyleSheet.create({
   },
 
   row: {
+    width: '90%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
+    marginVertical: 8,
   },
   iconContainer: {
     backgroundColor: '#a2a2a2',
@@ -38,34 +45,41 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginRight: 15,
   },
+  lineSuggest: {
+    height: 1,
+    backgroundColor: '#ddd', // Màu của đường phân cách
+    marginVertical: 10, // Khoảng cách giữa các dòng
+  },
   locationText: {
-
+    fontSize: 16,
+    // marginVertical: 10,
   },
 
   circle: {
-    width: 5,
-    height: 5,
-    backgroundColor: 'black',
+    width: 15,
+    height: 15,
+    backgroundColor: 'blue',
     position: 'absolute',
-    top: 20,
+    top: 31,
     left: 15,
-    borderRadius: 5,
+    borderRadius: 15,
   },
   line: {
     width: 1,
-    height: 50,
+    height: 46,
     backgroundColor: '#c4c4c4',
     position: 'absolute',
-    top: 28,
-    left: 17,
+    top: 46,
+    left: 22.5,
   },
   square: {
-    width: 5,
-    height: 5,
-    backgroundColor: 'black',
+    width: 15,
+    height: 15,
+    backgroundColor: 'red',
     position: 'absolute',
-    top: 80,
+    top: 92,
     left: 15,
+    borderRadius: 15,
   },
 });
 

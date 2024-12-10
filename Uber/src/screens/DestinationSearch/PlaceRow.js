@@ -8,15 +8,19 @@ const PlaceRow = ({ data,handleSelectSuggestion,type }) => {
     <TouchableOpacity onPress={()=>{
       handleSelectSuggestion(data,type)
     }}>
+    <View>
       <View style={styles.row}>
-        <View style={styles.iconContainer}>
-          {data.description === 'Home'
-            ? <Entypo name='home' siz={20} color={'white'} />
-            : <Entypo name='location-pin' siz={20} color={'white'} />
-          }
+          <View style={styles.iconContainer}>
+            {data.description === 'Home'
+              ? <Entypo name='home' siz={20} color={'white'} />
+              : <Entypo name='location-pin' siz={20} color={'white'} />
+            }
+          </View>
+          <Text style={styles.locationText}>{data.description || data.vicinity}</Text>
         </View>
-        <Text style={styles.locationText}>{data.description || data.vicinity}</Text>
-      </View>
+      <View style={styles.lineSuggest}></View>
+    </View>
+      
     </TouchableOpacity>
   );
 };
