@@ -1,18 +1,50 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import React, { use, useEffect, useState } from "react";
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, ImageBackground } from "react-native";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const auth = getAuth();
 export default function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [errorValiPass, setErrorValiPass] = useState('');
+  console.log("password", password);
+  console.log("password2", password2);
+  console.log("errorMessage", errorMessage);
+  console.log("do dai", password.length); 
 
+  const validatePassword = () => {
+    if (!password) {
+      return setErrorValiPass('Mật khẩu không được để trống!');
+    }
+    if (password.length < 6) {
+      console.log("do dai", password.length); 
+      return setErrorValiPass('Mật khẩu phải chứa ít nhất 6 ký tự!');
+    }
+    if (!/[a-zA-Z]/.test(password)) {
+      return setErrorValiPass('Mật khẩu phải chứa ít nhất một chữ!');
+    }
+    if (!/\d/.test(password)) {
+      return setErrorValiPass('Mật khẩu phải chứa ít nhất một chữ số!');
+    }
+    // if (!/[A-Z]/.test(password)) {
+    //   setErrorValiPass('Mật khẩu phải chứa ít nhất một chữ in hoa!');
+    // }
+    return setErrorValiPass('');
+  };
   // Hàm đăng ký
   const handleSignUp = async () => {
-    if (!email || !password) {
+    if (!email || !password || !password2) {
       Alert.alert("Lỗi", "Vui lòng điền đầy đủ thông tin.");
       return;
+    }
+    if (password !== password2) {
+      setErrorMessage('Mật khẩu không khớp!');
+      return;
+    } else { 
+      setErrorMessage('');
     }
 
     setIsLoading(true); // Bắt đầu quá trình đăng ký
@@ -38,64 +70,143 @@ export default function SignUpScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Đăng ký tài khoản</Text>
+    <ImageBackground
+      source={{ uri: 'https://img.lovepik.com/background/20211101/medium/lovepik-mobile-phone-wallpaper-for-tech-city-background-image_400521604.jpg' }}
+      style={styles.background}
+    >
+    <View style={styles.overlay}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Đăng Ký</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Mật khẩu"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            placeholderTextColor="#aaa"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Mật khẩu"
+            value={password}
+            onChangeText={(text) => {
+              setPassword(text);
+              setErrorMessage(''); // Reset lỗi khi người dùng nhập
+            }}
+            secureTextEntry
+            placeholderTextColor="#aaa"
+            onBlur={validatePassword} 
+          />
+          {errorValiPass ? (
+            <Text style={styles.errorMessage}>{errorValiPass}</Text>
+          ) : null}
+          <TextInput
+            style={styles.input}
+            placeholder="Nhập lại mật khẩu"
+            value={password2}
+            onChangeText={(text) => {
+              setPassword2(text);
+              setErrorValiPass(''); // Reset lỗi khi người dùng nhập
+            }}
+            secureTextEntry
+            placeholderTextColor="#aaa"
+          />
+          {errorMessage ? (
+            <Text style={styles.errorMessage}>{errorMessage}</Text>
+          ) : null}
+          <TouchableOpacity
+            style={[styles.button, isLoading && styles.buttonDisabled]}
+            onPress={handleSignUp}
+            disabled={isLoading}
+          >
+            <Text style={styles.buttonText}>
+              {isLoading ? 'Đang đăng ký...' : 'Đăng ký'}
+            </Text>
+          </TouchableOpacity>
 
-      <Button
-        title={isLoading ? "Đang đăng ký..." : "Đăng ký"}
-        onPress={handleSignUp}
-        disabled={isLoading}
-      />
-
-      <View style={styles.loginLinkContainer}>
-        <Text>Bạn đã có tài khoản? </Text>
-        <Button
-          title="Đăng nhập"
-          onPress={() => navigation.navigate("Login")}
-        />
+          <View style={styles.signupLinkContainer}>
+            <Text style={styles.text}>Bạn chưa có tài khoản? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.signupLink}>Đăng ký</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
+    resizeMode: 'cover',
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Tạo lớp mờ cho hình nền
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    width: '90%',
+    padding: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  errorMessage: {
+    color: 'red',
+    marginBottom: 10,
+    fontSize: 14,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     marginBottom: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
   },
   input: {
-    width: "100%",
-    height: 40,
-    borderColor: "#ccc",
+    width: '100%',
+    height: 50,
+    borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 12,
-    paddingLeft: 8,
+    borderRadius: 8,
+    marginBottom: 16,
+    paddingLeft: 16,
+    backgroundColor: '#fff',
   },
-  loginLinkContainer: {
+  button: {
+    backgroundColor: '#4CAF50',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonDisabled: {
+    backgroundColor: '#A5D6A7',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  signupLinkContainer: {
     marginTop: 20,
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  text: {
+    fontSize: 14,
+    color: '#333',
+  },
+  signupLink: {
+    fontSize: 14,
+    color: '#4CAF50',
+    fontWeight: 'bold',
   },
 });
