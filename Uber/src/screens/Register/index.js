@@ -7,58 +7,103 @@ export default function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+  const [phone, setPhone] = useState("");
+  const [fullName, setfullName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [errorValiPass, setErrorValiPass] = useState('');
-  const [errorEmail, setErrorEmail] = useState('');
-  console.log("password", password);
-  console.log("password2", password2);
-  console.log("errorMessage", errorMessage);
+  // const [errorMessage, setErrorMessage] = useState('');
+  // const [errorValiPass, setErrorValiPass] = useState('');
+  // const [errorEmail, setErrorEmail] = useState('');
+  // const [errorPhone, setErrorPhone] = useState('');
+  // const [errorFullName, setErrorFullName] = useState('');
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    re_password: "",
+  });
 
-  const validateEmail = () => {
+  const [errors, setErrors] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    re_password: "",
+  });
+
+  const validateFullName = (fullName) => {
+    if (!fullName) {
+      return 'Họ và tên không được để trống!';
+    }
+    return ''; 
+  };
+  const validatePhone = (phone) => {
+    if (!phone) {
+      return 'Số điện thoại không được để trống!';
+    }
+    // Regex kiểm tra số điện thoại Việt Nam từ 10 đến 11 chữ số
+    const vietnamPhoneRegex = /^(0)(3|5|7|8|9)\d{8,9}$/;
+    if (!vietnamPhoneRegex.test(phone)) {
+      return 'Số điện thoại phải 10,11 số. Vui lòng nhập chính xác số điện thoại của bạn';
+    }
+    return ''; 
+  };
+  const validateEmail = (email) => {
     if (!email) {
-      return setErrorEmail('Email không được để trống!');
+      return 'Email không được để trống!';
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
-      return setErrorEmail('Email không hợp lệ!');
+      return 'Email không hợp lệ!';
     }
-    return setErrorEmail('');
+    return '';
   };
 
-  const validatePassword = () => {
+  const validatePassword = (password) => {
     if (!password) {
-      return setErrorValiPass('Mật khẩu không được để trống!');
+      return 'Mật khẩu không được để trống!';
     }
     if (password.length < 6) {
-      console.log("do dai", password.length); 
-      return setErrorValiPass('Mật khẩu phải chứa ít nhất 6 ký tự!');
+      return 'Mật khẩu phải chứa ít nhất 6 ký tự!';
     }
     if (!/[a-zA-Z]/.test(password)) {
-      return setErrorValiPass('Mật khẩu phải chứa ít nhất một chữ!');
+      return 'Mật khẩu phải chứa ít nhất một chữ!';
     }
     if (!/\d/.test(password)) {
-      return setErrorValiPass('Mật khẩu phải chứa ít nhất một chữ số!');
+      return 'Mật khẩu phải chứa ít nhất một chữ số!';
     }
     // if (!/[A-Z]/.test(password)) {
     //   setErrorValiPass('Mật khẩu phải chứa ít nhất một chữ in hoa!');
     // }
-    return setErrorValiPass('');
+    return '';
+  };
+  const validateRePassword = (re_password) => {
+    if (!re_password) {
+      return 'Bạn cần nhập lại mật khẩu để xác nhận';
+    }
+    if (formData.password !== re_password) {
+      return 'Mật khẩu không chính xác, vui lòng nhập lại mật khẩu!';
+    } 
+    return ''; 
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      fullName: validateFullName(formData.fullName),
+      email: validateEmail(formData.email),
+      phone: validatePhone(formData.phone),
+      password: validatePassword(formData.password),
+      re_password: validateRePassword(formData.re_password),
+    };
+
+    setErrors(newErrors);
+
+    // Kiểm tra nếu không có lỗi
+    return Object.values(newErrors).every((error) => error === "");
   };
   // Hàm đăng ký
   const handleSignUp = async () => {
-    // if (!email || !password || !password2) {
-    //   Alert.alert("Lỗi", "Vui lòng điền đầy đủ thông tin.");
-    //   return;
-    // }
-    if(!password2) {
-      setErrorMessage('Bạn cần nhập trường này');
+    if (!validateForm()) {
       return;
-    }
-    if (password !== password2) {
-      setErrorMessage('Mật khẩu không chính xác, vui lòng nhập lại mật khẩu!');
-      return;
-    } else { 
-      setErrorMessage('');
     }
 
     setIsLoading(true); // Bắt đầu quá trình đăng ký
@@ -92,47 +137,73 @@ export default function SignUpScreen({ navigation }) {
 
           <TextInput
             style={styles.input}
-            placeholder="Email"
-            value={email}
+            placeholder="Họ và tên"
+            value={formData.fullName}
             onChangeText={(text) => {
-              setEmail(text);
-              setErrorMessage(''); 
-            }}
-            onBlur={validateEmail}
+              setFormData({ ...formData, fullName: text })
+              setErrors({ ...errors, fullName: "" })
+              }}
+            // keyboardType="email-address"
+            placeholderTextColor="#aaa"
+          />
+          {errors.fullName ? (
+            <Text style={styles.errorMessage}>{errors.fullName}</Text>
+          ) : null}
+          <TextInput
+            style={styles.input}
+            placeholder="Số điện thoại"
+            value={formData.phone}
+            onChangeText={(text) => {
+              setFormData({ ...formData, phone: text })
+              setErrors({ ...errors, phone: '' })
+              }}
+            // keyboardType="email-address"
+            placeholderTextColor="#aaa"
+          />
+          {errors.phone ? (
+            <Text style={styles.errorMessage}>{errors.phone}</Text>
+          ) : null}
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={formData.email}
+            onChangeText={(text) => {
+              setFormData({ ...formData, email: text })
+              setErrors({ ...errors, email: '' })
+              }}
             keyboardType="email-address"
             placeholderTextColor="#aaa"
           />
-          {errorEmail ? (
-            <Text style={styles.errorMessage}>{errorEmail}</Text>
+          {errors.email ? (
+            <Text style={styles.errorMessage}>{errors.email}</Text>
           ) : null}
           <TextInput
             style={styles.input}
             placeholder="Mật khẩu"
-            value={password}
+            value={formData.password}
             onChangeText={(text) => {
-              setPassword(text);
-              setErrorMessage(''); 
-            }}
+              setFormData({ ...formData, password: text })
+              setErrors({ ...errors, password: '' })
+              }}
             secureTextEntry
             placeholderTextColor="#aaa"
-            onBlur={validatePassword} 
           />
-          {errorValiPass ? (
-            <Text style={styles.errorMessage}>{errorValiPass}</Text>
+          {errors.password ? (
+            <Text style={styles.errorMessage}>{errors.password}</Text>
           ) : null}
           <TextInput
             style={styles.input}
             placeholder="Nhập lại mật khẩu"
-            value={password2}
+            value={formData.re_password}
             onChangeText={(text) => {
-              setPassword2(text);
-              setErrorValiPass('');
-            }}
+              setFormData({ ...formData, re_password: text })
+              setErrors({ ...errors, re_password: '' })
+              }}
             secureTextEntry
             placeholderTextColor="#aaa"
           />
-          {errorMessage ? (
-            <Text style={styles.errorMessage}>{errorMessage}</Text>
+          {errors.re_password ? (
+            <Text style={styles.errorMessage}>{errors.re_password}</Text>
           ) : null}
           <TouchableOpacity
             style={[styles.button, isLoading && styles.buttonDisabled]}
@@ -145,9 +216,9 @@ export default function SignUpScreen({ navigation }) {
           </TouchableOpacity>
 
           <View style={styles.signupLinkContainer}>
-            <Text style={styles.text}>Bạn chưa có tài khoản? </Text>
+            <Text style={styles.text}>Bạn đã có tài khoản? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.signupLink}>Đăng ký</Text>
+              <Text style={styles.signupLink}>Đăng nhập</Text>
             </TouchableOpacity>
           </View>
         </View>
