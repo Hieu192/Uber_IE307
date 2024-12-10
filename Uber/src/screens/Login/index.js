@@ -9,11 +9,20 @@ export default function SignInPage({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorEmail, setErrorEmail] = useState('');
+  const [errorValiPass, setErrorValiPass] = useState('');
 
   // Hàm đăng nhập
   const handleSignIn = async () => {
-    if (!email || !password) {
-      Alert.alert('Lỗi', 'Vui lòng điền đầy đủ thông tin.');
+    // if (!email || !password) {
+    //   Alert.alert('Lỗi', 'Vui lòng điền đầy đủ thông tin.');
+    //   return;
+    // }
+    if (!email) {
+      return setErrorEmail('Bạn cần nhập email');
+    }
+    if(!password) {
+      setErrorValiPass('Bạn cần nhập mật khẩu');
       return;
     }
 
@@ -45,19 +54,30 @@ export default function SignInPage({ navigation }) {
             style={styles.input}
             placeholder="Email"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(text) => {
+              setEmail(text);
+              setErrorEmail('');
+            }}
             keyboardType="email-address"
             placeholderTextColor="#aaa"
           />
+          {errorEmail ? (
+            <Text style={styles.errorMessage}>{errorEmail}</Text>
+          ) : null}
           <TextInput
             style={styles.input}
             placeholder="Mật khẩu"
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(text) => {
+              setPassword(text);
+              setErrorValiPass('');
+            }}
             secureTextEntry
             placeholderTextColor="#aaa"
           />
-
+          {errorValiPass ? (
+            <Text style={styles.errorMessage}>{errorValiPass}</Text>
+          ) : null}
           <TouchableOpacity
             style={[styles.button, isLoading && styles.buttonDisabled]}
             onPress={handleSignIn}
@@ -101,6 +121,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
+  },
+  errorMessage: {
+    color: 'red',
+    marginBottom: 10,
+    fontSize: 14,
   },
   title: {
     fontSize: 28,
