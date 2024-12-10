@@ -7,7 +7,7 @@ import OrderScreen from "../screens/OrderScreen";
 
 const Stack = createStackNavigator();
 
-const HomeNavigator = (props) => {
+const HomeStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -22,4 +22,4 @@ const HomeNavigator = (props) => {
   );
 };
 
-export default HomeNavigator;
+export default HomeStack;

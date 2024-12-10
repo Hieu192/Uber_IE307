@@ -1,9 +1,10 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
 import {DrawerContentScrollView, DrawerItemList} from '@react-navigation/drawer';
-import { Auth } from 'aws-amplify';
-
+import { useDispatch } from "react-redux";
+import {Logout} from "../redux/slices/auth"
 const CustomDrawer = (props) => {
+  const dispatch=useDispatch();
   return (
     <DrawerContentScrollView {...props}>
       <View style={{backgroundColor: '#212121', padding: 15}}>
@@ -59,7 +60,7 @@ const CustomDrawer = (props) => {
       <DrawerItemList {...props} />
 
       {/* Make money */}
-      <Pressable onPress={() => { Auth.signOut() }}>
+      <Pressable onPress={() => {dispatch(Logout()) }}>
         <Text style={{padding: 5, paddingLeft: 20}}>Logout</Text>
       </Pressable>
     </DrawerContentScrollView>
