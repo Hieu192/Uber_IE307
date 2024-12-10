@@ -58,11 +58,9 @@ const DestinationSearch = (props) => {
         },
       });
       if (type === "origin") {
-        setOriginPlace({value});
         setIsStartSuggestion(false);
         setSuggestOriginLocation(data.predictions);
       } else {
-        setDestinationPlace({value});
         setIsEndSuggestion(false);
         setSuggestDestinationLocation(data.predictions);
       }
@@ -72,7 +70,7 @@ const DestinationSearch = (props) => {
   };
   const handleSelectSuggestion = (place, type) => {
     if (type === "origin") {
-      setOriginPlace({ place_id: place.place_id ,value:place.description});
+      setOriginPlace({ place_id: place.place_id, value: place.description });
       setIsStartSuggestion(true);
     } else {
       setDestinationPlace(place);
@@ -95,7 +93,10 @@ const DestinationSearch = (props) => {
         <TextInput
           style={styles.input}
           placeholder="Chọn điểm đón"
-          onChangeText={(value) => handleChangeInput(value, "origin")}
+          onChangeText={(value) => {
+            setOriginPlace({ value });
+            handleChangeInput(value, "origin");
+          }}
           onFocus={() => {
             handleFocus("origin");
           }}
@@ -109,7 +110,10 @@ const DestinationSearch = (props) => {
         <TextInput
           style={styles.input}
           placeholder="Chọn điểm đến"
-          onChangeText={(value) => handleChangeInput(value, "destination")}
+          onChangeText={(value) => {
+            setDestinationPlace({ value });
+            handleChangeInput(value, "destination");
+          }}
           onFocus={() => {
             handleFocus("destination");
           }}
