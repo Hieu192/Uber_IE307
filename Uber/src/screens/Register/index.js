@@ -10,10 +10,20 @@ export default function SignUpScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [errorValiPass, setErrorValiPass] = useState('');
+  const [errorEmail, setErrorEmail] = useState('');
   console.log("password", password);
   console.log("password2", password2);
   console.log("errorMessage", errorMessage);
-  console.log("do dai", password.length); 
+
+  const validateEmail = () => {
+    if (!email) {
+      return setErrorEmail('Email không được để trống!');
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      return setErrorEmail('Email không hợp lệ!');
+    }
+    return setErrorEmail('');
+  };
 
   const validatePassword = () => {
     if (!password) {
@@ -36,12 +46,16 @@ export default function SignUpScreen({ navigation }) {
   };
   // Hàm đăng ký
   const handleSignUp = async () => {
-    if (!email || !password || !password2) {
-      Alert.alert("Lỗi", "Vui lòng điền đầy đủ thông tin.");
+    // if (!email || !password || !password2) {
+    //   Alert.alert("Lỗi", "Vui lòng điền đầy đủ thông tin.");
+    //   return;
+    // }
+    if(!password2) {
+      setErrorMessage('Bạn cần nhập trường này');
       return;
     }
     if (password !== password2) {
-      setErrorMessage('Mật khẩu không khớp!');
+      setErrorMessage('Mật khẩu không chính xác, vui lòng nhập lại mật khẩu!');
       return;
     } else { 
       setErrorMessage('');
@@ -80,17 +94,24 @@ export default function SignUpScreen({ navigation }) {
             style={styles.input}
             placeholder="Email"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(text) => {
+              setEmail(text);
+              setErrorMessage(''); 
+            }}
+            onBlur={validateEmail}
             keyboardType="email-address"
             placeholderTextColor="#aaa"
           />
+          {errorEmail ? (
+            <Text style={styles.errorMessage}>{errorEmail}</Text>
+          ) : null}
           <TextInput
             style={styles.input}
             placeholder="Mật khẩu"
             value={password}
             onChangeText={(text) => {
               setPassword(text);
-              setErrorMessage(''); // Reset lỗi khi người dùng nhập
+              setErrorMessage(''); 
             }}
             secureTextEntry
             placeholderTextColor="#aaa"
@@ -105,7 +126,7 @@ export default function SignUpScreen({ navigation }) {
             value={password2}
             onChangeText={(text) => {
               setPassword2(text);
-              setErrorValiPass(''); // Reset lỗi khi người dùng nhập
+              setErrorValiPass('');
             }}
             secureTextEntry
             placeholderTextColor="#aaa"
