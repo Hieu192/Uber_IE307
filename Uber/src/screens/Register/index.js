@@ -145,9 +145,9 @@ export default function SignUpScreen({ navigation }) {
           </TouchableOpacity>
 
           <View style={styles.signupLinkContainer}>
-            <Text style={styles.text}>Bạn chưa có tài khoản? </Text>
+            <Text style={styles.text}>Bạn đã có tài khoản? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.signupLink}>Đăng ký</Text>
+              <Text style={styles.signupLink}>Đăng nhập</Text>
             </TouchableOpacity>
           </View>
         </View>

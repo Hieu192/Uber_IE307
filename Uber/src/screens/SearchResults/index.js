@@ -23,19 +23,19 @@ const SearchResults = (props) => {
     // submit to server
     try {
       const date = new Date();
-      const input = {
-        createdAt: date.toISOString(),
-        type,
-        originLatitude: originPlace.details.geometry.location.lat,
-        oreiginLongitude: originPlace.details.geometry.location.lng,
+      // const input = {
+      //   createdAt: date.toISOString(),
+      //   type,
+      //   originLatitude: originPlace.details.geometry.location.lat,
+      //   oreiginLongitude: originPlace.details.geometry.location.lng,
 
-        destLatitude: destinationPlace.details.geometry.location.lat,
-        destLongitude: destinationPlace.details.geometry.location.lng,
+      //   destLatitude: destinationPlace.details.geometry.location.lat,
+      //   destLongitude: destinationPlace.details.geometry.location.lng,
 
-        userId: userInfo.attributes.sub,
-        carId: "1",
-        status: "NEW",
-      }
+      //   userId: userInfo.attributes.sub,
+      //   carId: "1",
+      //   status: "NEW",
+      // }
 
       // const response = await API.graphql(
       //   graphqlOperation(
@@ -45,20 +45,19 @@ const SearchResults = (props) => {
       //   )
       // )
 
-      console.log(response);
+      // console.log(response);
 
-      navigation.navigate('OrderPage', { id: response.data.createOrder.id });
+      navigation.navigate('OrderPage', { id: "khfkdfkds" });
     } catch (e) {
       console.error(e);
     }
   }
 
   return (
-    <View style={{display: 'flex', justifyContent: 'space-between'}}>
-      <View style={{height: Dimensions.get('window').height - 400}}>
+    <View style={{ display: 'flex', flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <RouteMap origin={originPlace} destination={destinationPlace} />
       </View>
-
       <View style={{height: 400}}>
         <UberTypes typeState={typeState} onSubmit={onSubmit} />
       </View>

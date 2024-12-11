@@ -26,7 +26,7 @@ const UberTypes = ({ typeState, onSubmit }) => {
         alignItems: 'center',
       }}>
         <Text style={{color: 'white', fontWeight: 'bold'}}>
-          Confirm Uber
+          Confirm Uber 
         </Text>
       </Pressable>
     </View>
