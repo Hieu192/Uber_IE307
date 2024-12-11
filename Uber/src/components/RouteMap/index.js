@@ -17,8 +17,8 @@ const RouteMap = ({ origin, destination }) => {
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
   const [direction, setDirection] = useState([]);
-  // console.log(origin)
-  // console.log(destination)
+  console.log("origin::",origin)
+  console.log("destination:::",destination)
   const fetchLocation = async () => {
     console.log("đã được gọi fetch");
     try {
