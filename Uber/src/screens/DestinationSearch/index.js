@@ -27,9 +27,23 @@ const DestinationSearch = (props) => {
   const [visible, setVisible] = useState("");
   const [selectButton, setSelectButton] = useState(1);
   const navigation = useNavigation();
+  console.log("Toa do hien tai la",currentLocation)
+  console.log("originPlace::",originPlace)
+  console.log("destinationPlace::",destinationPlace)
   //  console.log("Toa do hien tai la",currentLocation)
+  // useEffect(() => {
+  //   (async () => {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== "granted") {
+  //       Alert.alert("Permission Denied", "Allow location access to use this feature.");
+  //       return;
+  //     }
+  //     let loc = await Location.getCurrentPositionAsync({});
+  //     setOriginPlace(loc.coords); // Lấy địa chỉ từ tọa độ
+  //   })();
+  // }, []);
   const checkNavigation = () => {
-    if (isStartSuggestion && isEndSuggestion) {
+    if ( isEndSuggestion) {
       navigation.replace("SearchResults", {
         originPlace,
         destinationPlace,
@@ -40,10 +54,9 @@ const DestinationSearch = (props) => {
     setSelectButton(id);
   }
   const handleFocus = (type) => {
-    console.log("type", type);
     if (type === "origin" && isStartSuggestion) {
       setVisible("origin");
-      setOriginPlace("");
+      // setOriginPlace("");
     } else if (type === "origin") {
       setVisible("origin");
     }
@@ -88,20 +101,27 @@ const DestinationSearch = (props) => {
   const getCurrentLocation = async () => {
     const location = await Location.getCurrentPositionAsync({});
     setCurrentLocation(location.coords);
+    const { data } = await axiosInstance.get("/geocode", {
+      params: {
+        latlng: currentLocation.latitude + "," + currentLocation.longitude,
+      },
+    });
+    console.log("Dia chi hien tai la",data.results[0])
+    setOriginPlace({ value: data.results[0].value, place_id: data.results[0].place_id });
   };
   useEffect(() => {
     getCurrentLocation();
   }, []);
   useEffect(() => {
     checkNavigation();
-  }, [isStartSuggestion, isEndSuggestion]);
+  }, [isEndSuggestion]);
   return (
     <SafeAreaView>
       <View style={styles.container}>
         <TextInput
         ref={inputOriginRef}
-          style={styles.input}
-          placeholder="Chọn điểm đón"
+          style={visible === "origin" ? styles.inputFocus : styles.input}
+          placeholder={visible === "origin" ? "Chọn điểm đón" : "Vị trí hiện tại"}
           onChangeText={(value) => {
             setOriginPlace({ value });
             handleChangeInput(value, "origin");
@@ -109,7 +129,7 @@ const DestinationSearch = (props) => {
           onFocus={() => {
             handleFocus("origin");
           }}
-          value={originPlace.value}
+          value={originPlace.value }
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="default"
@@ -118,7 +138,7 @@ const DestinationSearch = (props) => {
         />
         <TextInput
           ref={inputDestinationRef}
-          style={styles.input}
+          style={visible === "destination" ? styles.inputFocus : styles.input}
           placeholder="Chọn điểm đến"
           onChangeText={(value) => {
             setDestinationPlace({ value });

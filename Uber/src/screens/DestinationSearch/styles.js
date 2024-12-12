@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     height: '100%',
+    backgroundColor: '#fff',
   },
   input: {
     width: '85%',
@@ -15,6 +16,19 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     paddingLeft: 16,
     backgroundColor: '#fff',
+    borderWidth: 0,
+  },
+  inputFocus: {
+    width: '85%',
+    height: 45,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 16,
+    marginLeft: 30,
+    paddingLeft: 16,
+    backgroundColor: '#E0E0E0',
+    borderWidth: 1,
   },
   listView: {
     margin: 16,

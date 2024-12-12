@@ -3,16 +3,21 @@ import { StyleSheet, View, Alert } from "react-native";
 import { WebView } from "react-native-webview";
 
 const MapboxNavigation = () => {
+  
   const html = `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js'></script>
-      <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css' rel='stylesheet' />
-      <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v5.0.0/mapbox-gl-directions.js"></script>
-      <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v5.0.0/mapbox-gl-directions.css" type="text/css" />
+      <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css"
+    type="text/css"
+  />
       <style>
         body { margin: 0; padding: 0; }
         #map { position: absolute; top: 0; bottom: 0; width: 100%; }
@@ -38,7 +43,11 @@ map.addControl(nav);
 
 // Khởi tạo Mapbox Directions
 const directions = new MapboxDirections({
-  accessToken: mapboxgl.accessToken
+  accessToken: mapboxgl.accessToken,
+     controls: {
+      
+            instructions: false // Ẩn danh sách hướng dẫn
+          }
 });
 map.addControl(directions, 'top-left');
 
@@ -139,6 +148,7 @@ directions.on('route', function (e) {
       map.easeTo({
         center: current,
         bearing: bearing, // Cập nhật hướng bản đồ
+         zoom: 15, 
         pitch: 45, // Đảm bảo góc nhìn
         duration: 1000 // Thời gian chuyển đổi mượt mà
       });
@@ -147,8 +157,9 @@ directions.on('route', function (e) {
       steps.forEach((step) => {
         const stepLocation = step.maneuver.location;
         const distance = getDistance(current, stepLocation);
+         window.ReactNativeWebView.postMessage("Thông điệp từ WebView");
         if (distance < 50) { // Nếu gần bước chỉ dẫn
-          window.ReactNativeWebView.postMessage("Chỉ dẫn:"+ step.maneuver.instruction);
+          //document.ReactNativeWebView.postMessage("Thông điệp từ WebView");
         }
       });
 
@@ -163,7 +174,7 @@ directions.on('route', function (e) {
     </body>
     </html>
   `;
-
+  console.log("render")
   return (
     <View style={styles.container}>
       <WebView
@@ -171,7 +182,7 @@ directions.on('route', function (e) {
         source={{ html }}
         style={{ flex: 1 }}
         onMessage={(event) => {
-          Alert.alert('Thông báo', event.nativeEvent.data); // Hiển thị thông báo trong ứng dụng
+          Alert.alert('Thông báo từ WebView:', event.nativeEvent.data);
         }}
       />
     </View>
