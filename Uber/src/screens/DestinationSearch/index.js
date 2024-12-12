@@ -43,7 +43,7 @@ const DestinationSearch = (props) => {
   //   })();
   // }, []);
   const checkNavigation = () => {
-    if ( isEndSuggestion) {
+    if (isEndSuggestion) {
       navigation.replace("SearchResults", {
         originPlace,
         destinationPlace,
@@ -103,18 +103,19 @@ const DestinationSearch = (props) => {
     setCurrentLocation(location.coords);
     const { data } = await axiosInstance.get("/geocode", {
       params: {
-        latlng: currentLocation.latitude + "," + currentLocation.longitude,
+        latlng: location.coords.latitude + "," + location.coords.longitude,
       },
     });
     console.log("Dia chi hien tai la",data.results[0])
-    setOriginPlace({ value: data.results[0].value, place_id: data.results[0].place_id });
+    setOriginPlace({ value: data.results[0].formatted_address, place_id: data.results[0].place_id });
   };
   useEffect(() => {
-    getCurrentLocation();
+    console.log("useEffect")
+    const fetchLocation = async () => {
+      await getCurrentLocation();
+    };
+    fetchLocation();
   }, []);
-  useEffect(() => {
-    checkNavigation();
-  }, [isEndSuggestion]);
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -129,7 +130,7 @@ const DestinationSearch = (props) => {
           onFocus={() => {
             handleFocus("origin");
           }}
-          value={originPlace.value }
+          value={originPlace.value}
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="default"
