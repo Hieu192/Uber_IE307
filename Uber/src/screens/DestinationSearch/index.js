@@ -44,6 +44,8 @@ const DestinationSearch = (props) => {
   // }, []);
   const checkNavigation = () => {
     if ( isEndSuggestion) {
+      console.log("dia diem di",originPlace)
+      console.log("dia diem den",destinationPlace)
       navigation.replace("SearchResults", {
         originPlace,
         destinationPlace,

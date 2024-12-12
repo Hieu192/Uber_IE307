@@ -23,7 +23,7 @@ const CustomDrawer = (props) => {
           }}/>
 
           <View>
-            <Text style={{color: 'white', fontSize: 24}}>Vadim Savin</Text>
+            <Text style={{color: 'white', fontSize: 24}}>Phuc Cao</Text>
             <Text style={{color: 'lightgrey'}}>5.00 *</Text>
           </View>
         </View>
