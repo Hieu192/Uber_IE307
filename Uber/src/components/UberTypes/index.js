@@ -4,10 +4,15 @@ import styles from './styles.js';
 import UberTypeRow from '../UberTypeRow';
 
 import typesData from '../../assets/data/types';
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 const UberTypes = ({ typeState, onSubmit }) => {
   const [selectedType, setSelectedType] = typeState;
-
+  const navigation = useNavigation()
+  const route = useRoute();
+  console.log("route:::", route.params)
+  const selectedMethod = useSelector((state) => state.method.method);
   return (
     <View style={{flex: 1}}>
       <View style={{ height: 280, borderWidth: 1, borderColor: '#ddd'}}>
@@ -36,13 +41,19 @@ const UberTypes = ({ typeState, onSubmit }) => {
       <View 
         style={{ 
           flexDirection: "row", 
-          // justifyContent: "space-between", 
           alignItems: "center",
         }}>
-        <Pressable style={{ flex: 1,padding: 10, backgroundColor: 'white', alignItems: "center", justifyContent: "center", borderTopLeftRadius: 30,}}>
-          <Text style={{ color: 'black' }}>Tiền mặt</Text>
+        <Pressable 
+          onPress={() => {
+            navigation.navigate("checkoutType", )
+          }}
+          style={{ flex: 1,padding: 10, backgroundColor: 'white', alignItems: "center", justifyContent: "center", borderTopLeftRadius: 30,}}>
+          <Text style={{ color: 'black' }}>{selectedMethod || "Tiền mặt"}</Text>
         </Pressable>
-        <Pressable  style={{flex: 1,padding: 10, backgroundColor: 'white', alignItems: "center", justifyContent: "center", borderTopRightRadius: 30,}}>
+        <Pressable onPress={() => {
+            navigation.navigate("checkoutType")
+          }}  
+          style={{flex: 1,padding: 10, backgroundColor: 'white', alignItems: "center", justifyContent: "center", borderTopRightRadius: 30,}}>
           <Text style={{ color: 'black' }}>Ưu đãi</Text>
         </Pressable>
       </View>

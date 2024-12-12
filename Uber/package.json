@@ -37,7 +37,8 @@
     "react-native-vector-icons": "^10.2.0",
     "react-native-webview": "^13.12.5",
     "react-redux": "^9.1.2",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "undefined": "react-native-vector-icons/AntDesign"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
