@@ -5,71 +5,50 @@
  * @format
  * @flow strict-local
  */
-
+import './firebaseConfig';
 import React, { useEffect } from 'react';
 import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
-import HomeScreen from './src/screens/HomeScreen';
-import {Amplify,
-  Auth,
-  API,
-  graphqlOperation,
-} from 'aws-amplify';
-import config from './aws-exports';
-import { withAuthenticator } from 'aws-amplify-react-native';
-import { getCarId } from './src/graphql/queries';
-import { createCar } from './src/graphql/mutations';
+import { Provider, useSelector } from 'react-redux';
+import { store } from './src/redux/store';
+import HomeStack from './src/navigation/HomeStack';
+import AuthStack from './src/navigation/AuthStack';
+import { NavigationContainer } from '@react-navigation/native';
 
+const MainApp = () => {
+  // Lấy trạng thái đăng nhập từ Redux
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
-Amplify.configure(config);
-
-const App = () => {
+  // Yêu cầu quyền truy cập vị trí
+  const requestLocationPermission = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status === 'granted') {
+      console.log('You can use the location');
+    } else {
+      console.log('Location permission denied');
+    }
+  };
 
   useEffect(() => {
-    const updateUserCar = async () => {
-      // Get authenticated user
-      const authenticatedUser = await Auth.currentAuthenticatedUser({ bypassCache: true });
-      if (!authenticatedUser) {
-        return;
-      }
-
-      // Check if the user has already a car
-      const carData = await API.graphql(
-        graphqlOperation(
-          getCarId,
-          { id: authenticatedUser.attributes.sub }
-        )
-      )
-
-      if (!!carData.data.getCar) {
-        console.log("User already has a car assigned");
-        return;
-      }
-
-      // If not, create a new car for the user
-      const newCar = {
-        id: authenticatedUser.attributes.sub,
-        type: 'UberX',
-        userId: authenticatedUser.attributes.sub,
-      }
-      await API.graphql(graphqlOperation(
-        createCar, { input: newCar }
-      ))
-    };
-
-    updateUserCar();
-  }, [])
+    requestLocationPermission();
+  }, []);
 
   return (
-    <>
+    <NavigationContainer>
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <HomeScreen />
-      </SafeAreaView>
-    </>
+      {isLoggedIn ? <HomeStack /> : <AuthStack />}
+    </NavigationContainer>
   );
 };
 
-export default withAuthenticator(App);
+const App = () => {
+  return (
+    <Provider store={store}>
+      <MainApp />
+    </Provider>
+  );
+};
+
+export default App;
