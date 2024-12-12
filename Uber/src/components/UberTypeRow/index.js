@@ -38,12 +38,12 @@ const UberTypeRow = (props) => {
           3
         </Text>
         <Text style={styles.time}>
-          8:03PM drop off
+          Cách điểm đón khoảng 2 phút
         </Text>
       </View>
       <View style={styles.rightContainer}>
-        <Ionicons name={'pricetag'} size={18} color={'#42d742'} />
-        <Text style={styles.price}>est. ${type.price}</Text>
+        {/* <Ionicons name={'pricetag'} size={18} color={'#42d742'} /> */}
+        <Text style={styles.price}>{type.price}đ</Text>
       </View>
     </Pressable>
   );

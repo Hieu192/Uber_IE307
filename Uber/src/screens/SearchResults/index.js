@@ -58,7 +58,7 @@ const SearchResults = (props) => {
       <View style={{ flex: 1 }}>
         <RouteMap origin={originPlace} destination={destinationPlace} />
       </View>
-      <View style={{height: 400}}>
+      <View style={{height: 400, backgroundColor: "white"}}>
         <UberTypes typeState={typeState} onSubmit={onSubmit} />
       </View>
     </View>
