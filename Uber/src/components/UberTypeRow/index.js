@@ -8,13 +8,22 @@ const UberTypeRow = (props) => {
   const {type, onPress, isSelected} = props;
 
   const getImage = () => {
-    if (type.type === 'UberX') {
-      return require('../../assets/images/UberX.jpeg');
+    if (type.type === 'Xe máy tiết kiệm') {
+      return require('../../assets/images/bike-1.png');
     }
-    if (type.type === 'Comfort') {
-      return require('../../assets/images/Comfort.jpeg');
+    if (type.type === 'Xe máy Bình Dương') {
+      return require('../../assets/images/bike-1.png');
     }
-    return require('../../assets/images/UberXL.jpeg');
+    if (type.type === 'Ô tô tiết kiệm') {
+      return require('../../assets/images/taxi-2.png');
+    }
+    if (type.type === 'Ô tô Bình Dương') {
+      return require('../../assets/images/taxi-2.png');
+    }
+    // if (type.type === 'taxi-3') {
+    //   return require('../../assets/images/bike-1.png');
+    // }
+    return require('../../assets/images/taxi-1.png');
   }
 
   return (
@@ -35,7 +44,7 @@ const UberTypeRow = (props) => {
         <Text style={styles.type}>
           {type.type}{' '}
           <Ionicons name={'person'} size={16} />
-          3
+          {type.seat}
         </Text>
         <Text style={styles.time}>
           Cách điểm đón khoảng 2 phút

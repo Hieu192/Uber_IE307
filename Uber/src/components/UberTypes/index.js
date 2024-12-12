@@ -25,14 +25,6 @@ const UberTypes = ({ typeState, onSubmit }) => {
             onPress={() => setSelectedType(type.type)}
           />
         ))}
-        {typesData.map((type) => (
-          <UberTypeRow
-            type={type}
-            key={type.id}
-            isSelected={type.type === selectedType}
-            onPress={() => setSelectedType(type.type)}
-          />
-        ))}
       </ScrollView>
     </View>
 
