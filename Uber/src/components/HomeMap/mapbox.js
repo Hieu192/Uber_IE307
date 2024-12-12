@@ -160,9 +160,8 @@ directions.on('route', function (e) {
       steps.forEach((step) => {
         const stepLocation = step.maneuver.location;
         const distance = getDistance(current, stepLocation);
-         window.ReactNativeWebView.postMessage("Thông điệp từ WebView");
         if (distance < 50) { // Nếu gần bước chỉ dẫn
-          //document.ReactNativeWebView.postMessage("Thông điệp từ WebView");
+          //window.ReactNativeWebView.postMessage(step.maneuver.instruction);
         }
       });
 
@@ -177,7 +176,6 @@ directions.on('route', function (e) {
     </body>
     </html>
   `;
-  console.log("render")
   return (
     <View style={styles.container}>
       <WebView
@@ -185,7 +183,7 @@ directions.on('route', function (e) {
         source={{ html }}
         style={{ flex: 1 }}
         onMessage={(event) => {
-          Alert.alert('Thông báo từ WebView:', event.nativeEvent.data);
+          //Alert.alert('Thông báo từ WebView:', event.nativeEvent.data);
         }}
       />
     </View>

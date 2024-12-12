@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { View, Dimensions, Text } from "react-native";
 import OrderMap from "../../components/OrderMap";
 import { useRoute } from '@react-navigation/native';
-import { onOrderUpdated, onCarUpdated } from './subscriptions';
 
-const OrderScreen = (props) => {
+
+const OrderScreen = () => {
+
   const [car, setCar] = useState(null);
   const [order, setOrder] = useState(null);
 
   const route = useRoute();
+  const {originPlace, destinationPlace}=route.params
   console.log(route.params.id);
 
   // Fetch order on initial render
@@ -77,7 +79,7 @@ const OrderScreen = (props) => {
   return (
     <View>
       <View style={{height: Dimensions.get('window').height - 400}}>
-        <OrderMap car={car} />
+        <OrderMap car={car} origin={originPlace} destination={destinationPlace}/>
       </View>
       <View>
         <Text>Order status: {order?.status}</Text>
