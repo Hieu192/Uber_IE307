@@ -20,7 +20,9 @@ const RootNavigator = (props) => {
         (props) => (
           <CustomDrawer {...props} />)
       }>
-        <Drawer.Screen name="Home" component={HomeStack} />
+        <Drawer.Screen name="Home" component={HomeStack} options={{
+          headerShown: false,
+        }}/>
 
         <Drawer.Screen name="Your Trips">
            {() => <DummyScreen name={"Your Trips"} />}

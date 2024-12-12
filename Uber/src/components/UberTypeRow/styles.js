@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
   type: {
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 5,
   },
   time: {
