@@ -11,7 +11,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 import { getCar, listOrders } from '../../graphql/queries';
 import { updateCar, updateOrder } from '../../graphql/mutations';
-
+import listenToNotifications from "../../components/LIstenForNotification/index.js";
 const origin = {latitude: 28.450927, longitude: -16.260845};
 const destination = {latitude: 37.771707, longitude: -122.4053769};
 const GOOGLE_MAPS_APIKEY = 'AIzaSyDFhFUaYpyAjNE4Eq-sWCGWjrr6kyGnhbQ';
@@ -21,7 +21,7 @@ const HomeScreen = () => {
   const [myPosition, setMyPosition] = useState(null);
   const [order, setOrder] = useState(null)
   const [newOrders, setNewOrders] = useState([]);
-
+  
   const fetchCar = async () => {
     try {
       const userData = await Auth.currentAuthenticatedUser();
@@ -49,6 +49,7 @@ const HomeScreen = () => {
   }
 
   useEffect(() => {
+    listenToNotifications("22xi8iSa5YctKqQcFoxR")
     fetchCar();
     fetchOrders();
   }, []);
