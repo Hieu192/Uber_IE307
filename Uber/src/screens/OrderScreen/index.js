@@ -8,7 +8,6 @@ const OrderScreen = () => {
 
   const [car, setCar] = useState(null);
   const [order, setOrder] = useState(null);
-
   const route = useRoute();
   const {originPlace, destinationPlace}=route.params
   console.log(route.params.id);
@@ -78,11 +77,11 @@ const OrderScreen = () => {
 
   return (
     <View>
-      <View style={{height: Dimensions.get('window').height - 400}}>
+      <View style={{height: Dimensions.get('window').height - 200}}>
         <OrderMap car={car} origin={originPlace} destination={destinationPlace}/>
       </View>
       <View>
-        <Text>Order status: {order?.status}</Text>
+        <Text>Trạng thái đơn hàng : {order?.status}</Text>
       </View>
     </View>
   );

@@ -38,7 +38,10 @@ const HomeStack = () => {
           headerShown: true, 
           title: "Phương thức thanh toán",
         }}/>
-      <Stack.Screen name={"OrderPage"} component={OrderScreen} />
+      <Stack.Screen name={"OrderPage"} component={OrderScreen} options={{
+          headerShown: true, 
+          title: "Thanh toán",
+        }}/>
     </Stack.Navigator>
   );
 };
