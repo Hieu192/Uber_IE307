@@ -116,6 +116,10 @@ const DestinationSearch = (props) => {
     };
     fetchLocation();
   }, []);
+
+  useEffect(() => {
+    checkNavigation();
+  }, [isEndSuggestion]);
   return (
     <SafeAreaView>
       <View style={styles.container}>

@@ -24,20 +24,20 @@ const RootNavigator = (props) => {
           headerShown: false,
         }}/>
 
-        <Drawer.Screen name="Your Trips">
-           {() => <DummyScreen name={"Your Trips"} />}
+        <Drawer.Screen name="Các chuyến đi của tôi ">
+           {() => <DummyScreen name={"Các chuyến đi của tôi "} />}
         </Drawer.Screen>
 
-        <Drawer.Screen name="Help">
-          {() => <DummyScreen name={"Help"} />}
+        <Drawer.Screen name="Trợ giúp">
+          {() => <DummyScreen name={"Trợ giúp "} />}
         </Drawer.Screen>
 
-        <Drawer.Screen name="Wallet">
-          {() => <DummyScreen name={"Wallet"} />}
+        <Drawer.Screen name="Ví của tôi ">
+          {() => <DummyScreen name={"Ví của tôi "} />}
         </Drawer.Screen>
 
-        <Drawer.Screen name="Settings">
-          {() => <DummyScreen name={"Settings"} />}
+        <Drawer.Screen name="Cài đặt">
+          {() => <DummyScreen name={"Cài đặt "} />}
         </Drawer.Screen>
 
       </Drawer.Navigator>

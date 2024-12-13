@@ -39,19 +39,19 @@ const CustomDrawer = (props) => {
         }}>
           <Pressable
             onPress={() => {console.warn('Messages')}}>
-            <Text style={{color: '#dddddd', paddingVertical: 5,}}>Messages</Text>
+            <Text style={{color: '#dddddd', paddingVertical: 5,}}>Tin nhắn</Text>
           </Pressable>
         </View>
 
         { /* Do more */}
         <Pressable
           onPress={() => {console.warn('Make Money Driving')}}>
-          <Text style={{color: '#dddddd', paddingVertical: 5,}}>Do more with your account</Text>
+          <Text style={{color: '#dddddd', paddingVertical: 5,}}>Làm được nhiều hơn với tài khoản của bạn</Text>
         </Pressable>
 
         {/* Make money */}
         <Pressable onPress={() => {console.warn('Make Money Driving')}}>
-          <Text style={{color: 'white', paddingVertical: 5}}>Make money driving</Text>
+          <Text style={{color: 'white', paddingVertical: 5}}>Lái xe kiếm tiền </Text>
         </Pressable>
 
 
@@ -61,7 +61,7 @@ const CustomDrawer = (props) => {
 
       {/* Make money */}
       <Pressable onPress={() => {dispatch(Logout()) }}>
-        <Text style={{padding: 5, paddingLeft: 20}}>Logout</Text>
+        <Text style={{padding: 5, paddingLeft: 20}}>Đăng xuất</Text>
       </Pressable>
     </DrawerContentScrollView>
   );

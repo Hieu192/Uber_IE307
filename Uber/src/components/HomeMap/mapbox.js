@@ -1,8 +1,11 @@
 import React from "react";
 import { StyleSheet, View, Alert } from "react-native";
 import { WebView } from "react-native-webview";
+import { Image } from "react-native";
 
+const arrowImage = Image.resolveAssetSource(require("../../assets/images/arrow/mui-ten-edit-vip.png")).uri;
 const MapboxNavigation = () => {
+  // const arrowImage = require('../../assets/images/arrow/mui-ten-edit-vip.png');
   
   const html = `
     <!DOCTYPE html>
@@ -55,7 +58,7 @@ map.addControl(directions, 'top-left');
 const vehicleElement = document.createElement('div');
 vehicleElement.style.width = '40px';
 vehicleElement.style.height = '40px';
-vehicleElement.style.backgroundImage = "url('https://img.icons8.com/ios-filled/50/000000/up.png')";
+vehicleElement.style.backgroundImage = "url('${arrowImage}')";
 vehicleElement.style.backgroundSize = 'cover';
 vehicleElement.style.transformOrigin = 'center';
 vehicleElement.style.transform = 'rotate(180deg)'; // Mũi tên luôn hướng lên
