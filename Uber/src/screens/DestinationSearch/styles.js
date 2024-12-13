@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    // backgroundColor: '#4CAF50',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 16,
@@ -116,7 +115,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 50, // Căn bên phải của TextInput
     top: 26, // Căn giữa theo chiều dọc
-    // transform: [{ translateY: -12 }], // Điều chỉnh để nút "x" trông cân đối
     zIndex: 10, // Hiển thị nút xóa phía trên TextInput
     borderRadius: 12,
     backgroundColor: "#fff", // Màu nền của nút xóa

@@ -4,6 +4,7 @@ export default [
     type: 'Xe máy tiết kiệm',
     seat: 1,
     price: '22.000',
+    pricePerKm: 10000,
     duration: 45,
   },
   {
@@ -11,6 +12,7 @@ export default [
     type: 'Xe máy Bình Dương',
     seat: 1,
     price: '27.000',
+    pricePerKm: 12000,
     duration: 30,
   },
   {
@@ -18,6 +20,7 @@ export default [
     type: 'Ô tô tiết kiệm',
     seat: 4,
     price: '36.000',
+    pricePerKm: 20000,
     duration: 27,
   },
   {
@@ -25,6 +28,7 @@ export default [
     type: 'Ô tô Bình Dương',
     seat: 4,
     price: '55.000',
+    pricePerKm: 24000,
     duration: 27,
   },
   {
@@ -32,6 +36,7 @@ export default [
     type: 'Taxi Bình Dương',
     seat: 4,
     price: '72.000',
+    pricePerKm: 30000,
     duration: 27,
   },
 ]

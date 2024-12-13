@@ -5,8 +5,18 @@ import styles from './styles.js';
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const UberTypeRow = (props) => {
-  const {type, onPress, isSelected} = props;
-
+  const {type, onPress, isSelected, distance} = props;
+  console.log("distance:::", distance)
+  const distanceNumber = parseInt(distance, 10);
+  const calculatePrice = () => {
+    const basePrice = 1.5;
+    const pricePerKm = 1.5;
+    const price = basePrice + (type.pricePerKm * distanceNumber);
+    return price;
+  }
+  const price = calculatePrice();
+  const price1 = Math.round(price / 1000) * 1000
+  const price2 = price1.toLocaleString("de-DE")
   const getImage = () => {
     if (type.type === 'Xe máy tiết kiệm') {
       return require('../../assets/images/bike-1.png');
@@ -52,7 +62,7 @@ const UberTypeRow = (props) => {
       </View>
       <View style={styles.rightContainer}>
         {/* <Ionicons name={'pricetag'} size={18} color={'#42d742'} /> */}
-        <Text style={styles.price}>{type.price}đ</Text>
+        <Text style={styles.price}>{price2}đ</Text>
       </View>
     </Pressable>
   );

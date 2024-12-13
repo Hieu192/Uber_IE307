@@ -7,7 +7,7 @@ import typesData from '../../assets/data/types';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
-const UberTypes = ({ typeState, onSubmit }) => {
+const UberTypes = ({ typeState, onSubmit, distance }) => {
   const [selectedType, setSelectedType] = typeState;
   const navigation = useNavigation()
   const route = useRoute();
@@ -19,6 +19,7 @@ const UberTypes = ({ typeState, onSubmit }) => {
       <ScrollView>
         {typesData.map((type) => (
           <UberTypeRow
+            distance={distance}
             type={type}
             key={type.id}
             isSelected={type.type === selectedType}
