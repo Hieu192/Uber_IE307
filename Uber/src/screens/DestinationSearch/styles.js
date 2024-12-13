@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     marginLeft: 30,
     paddingLeft: 16,
+    paddingRight: 40,
     backgroundColor: '#E0E0E0',
     borderWidth: 1,
   },
@@ -108,7 +109,24 @@ const styles = StyleSheet.create({
   },
   selectButton: {
     backgroundColor: '#4CAF50',
-  }
+  },
+  clearButton: {
+    width: 24, // Độ rộng của nút xóa
+    height: 24, // Độ cao của nút xóa
+    position: "absolute",
+    right: 50, // Căn bên phải của TextInput
+    top: 26, // Căn giữa theo chiều dọc
+    // transform: [{ translateY: -12 }], // Điều chỉnh để nút "x" trông cân đối
+    zIndex: 10, // Hiển thị nút xóa phía trên TextInput
+    borderRadius: 12,
+    backgroundColor: "#fff", // Màu nền của nút xóa
+    justifyContent: "center", // Căn giữa nội dung theo chiều dọc
+    alignItems: "center", // Căn giữa nội dung theo chiều ngang
+  },
+  clearText: {
+    fontSize: 16,
+    color: "#999", // Màu chữ
+  },
 });
 
 export default styles;

@@ -18,6 +18,7 @@ const DestinationSearch = (props) => {
   const inputOriginRef = useRef(null);
   const inputDestinationRef = useRef(null);
   const [originPlace, setOriginPlace] = useState({});
+  const [currentOriginPlace, setCurrentOriginPlace] = useState({});
   const [destinationPlace, setDestinationPlace] = useState({});
   const [isStartSuggestion, setIsStartSuggestion] = useState(false);
   const [isEndSuggestion, setIsEndSuggestion] = useState(false);
@@ -30,18 +31,6 @@ const DestinationSearch = (props) => {
   console.log("Toa do hien tai la",currentLocation)
   console.log("originPlace::",originPlace)
   console.log("destinationPlace::",destinationPlace)
-  //  console.log("Toa do hien tai la",currentLocation)
-  // useEffect(() => {
-  //   (async () => {
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       Alert.alert("Permission Denied", "Allow location access to use this feature.");
-  //       return;
-  //     }
-  //     let loc = await Location.getCurrentPositionAsync({});
-  //     setOriginPlace(loc.coords); // Lấy địa chỉ từ tọa độ
-  //   })();
-  // }, []);
   const checkNavigation = () => {
     if (isEndSuggestion) {
       navigation.replace("SearchResults", {
@@ -106,8 +95,8 @@ const DestinationSearch = (props) => {
         latlng: location.coords.latitude + "," + location.coords.longitude,
       },
     });
-    console.log("Dia chi hien tai la",data.results[0])
     setOriginPlace({ value: data.results[0].formatted_address, place_id: data.results[0].place_id });
+    setCurrentOriginPlace({ value: data.results[0].formatted_address, place_id: data.results[0].place_id });
   };
   useEffect(() => {
     console.log("useEffect")
@@ -134,6 +123,11 @@ const DestinationSearch = (props) => {
           onFocus={() => {
             handleFocus("origin");
           }}
+          onBlur={async () => {
+            if (!originPlace.place_id) { // Kiểm tra nếu chưa chọn đề nghị
+              setOriginPlace(currentOriginPlace);
+            }
+          }}
           value={originPlace.value}
           autoCapitalize="none"
           autoCorrect={false}
@@ -141,6 +135,17 @@ const DestinationSearch = (props) => {
           returnKeyType="search"
           underlineColorAndroid="transparent"
         />
+        {(originPlace.value && visible === "origin") && (
+          <TouchableOpacity
+            style={styles.clearButton}
+            onPress={() => {
+              setOriginPlace({ value: "" });
+              setSuggestOriginLocation([]);
+            }}
+          >
+            <Text style={styles.clearText}> × </Text>
+          </TouchableOpacity>
+        )} 
         <TextInput
           ref={inputDestinationRef}
           style={visible === "destination" ? styles.inputFocus : styles.input}
