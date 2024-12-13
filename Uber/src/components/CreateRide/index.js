@@ -9,9 +9,13 @@ import {
   updateDoc
 } from "firebase/firestore";
 import { db } from "../../../firebaseConfig";
-
-const createRide = async (start_location, end_location) => {
+import listenForDriverResponses from "../LIstenForResponse";
+import {useDispatch} from "react-redux"
+import {updateLoading} from "../../redux/slices/app"
+const createRide = async (start_location, end_location,dispatch) => {
   try {
+    console.log("đang xử lílí")
+    dispatch(updateLoading(true))
     // Tạo cuốc xe trong Firestore
     const rideRef = await addDoc(collection(db, "rides"), {
       start_location,
@@ -19,7 +23,7 @@ const createRide = async (start_location, end_location) => {
       createdAt: new Date(),
       status: "pending", // Trạng thái ban đầu
     });
-
+    listenForDriverResponses(rideRef.id,dispatch)
     console.log("Cuốc xe được tạo với ID:", rideRef.id);
     createRideNotification(rideRef.id);
   } catch (error) {
@@ -43,7 +47,7 @@ async function createRideNotification(ride_id) {
         createdAt: new Date(),
         status:"pending"
       });
-      await updateDoc(doc.id, { isAvailable: false });
+      await updateDoc(doc.ref, { isAvailable: false });
     });
     console.log("Thông báo đã gửi tới tài xế.");
   } catch (error) {

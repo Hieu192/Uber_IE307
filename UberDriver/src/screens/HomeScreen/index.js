@@ -7,14 +7,10 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import styles from './styles.js'
 import NewOrderPopup from "../../components/NewOrderPopup";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-
-import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { getCar, listOrders } from '../../graphql/queries';
-import { updateCar, updateOrder } from '../../graphql/mutations';
 import listenToNotifications from "../../components/LIstenForNotification/index.js";
 const origin = {latitude: 28.450927, longitude: -16.260845};
 const destination = {latitude: 37.771707, longitude: -122.4053769};
-const GOOGLE_MAPS_APIKEY = 'AIzaSyDFhFUaYpyAjNE4Eq-sWCGWjrr6kyGnhbQ';
+
 
 const HomeScreen = () => {
   const [car, setCar] = useState(null);
@@ -24,11 +20,8 @@ const HomeScreen = () => {
   
   const fetchCar = async () => {
     try {
-      const userData = await Auth.currentAuthenticatedUser();
-      const carData = await API.graphql(
-        graphqlOperation(getCar, { id: userData.attributes.sub }),
-      );
-      setCar(carData.data.getCar);
+
+     // setCar(carData.data.getCar);
     } catch (e) {
       console.error(e);
     }
@@ -36,13 +29,7 @@ const HomeScreen = () => {
 
   const fetchOrders = async () => {
     try {
-        const ordersData = await API.graphql(
-          graphqlOperation(
-            listOrders,
-            { filter: { status: { eq: 'NEW'}}}
-            )
-        );
-        setNewOrders(ordersData.data.listOrders.items);
+       // setNewOrders(ordersData.data.listOrders.items);
     } catch (e) {
       console.log(e);
     }
@@ -55,39 +42,25 @@ const HomeScreen = () => {
   }, []);
 
   const onDecline = () => {
-    setNewOrders(newOrders.slice(1));
+    //setNewOrders(newOrders.slice(1));
   }
 
   const onAccept = async (newOrder) => {
     try {
-      const input = {
-        id: newOrder.id,
-        status: "PICKING_UP_CLIENT",
-        carId: car.id
-      }
-      const orderData = await API.graphql(
-        graphqlOperation(updateOrder, { input })
-      )
-      setOrder(orderData.data.updateOrder);
+  
+      //setOrder(orderData.data.updateOrder);
     } catch (e) {
 
     }
 
-    setNewOrders(newOrders.slice(1));
+   // setNewOrders(newOrders.slice(1));
   }
 
   const onGoPress = async () => {
     // Update the car and set it to active
     try {
-      const userData = await Auth.currentAuthenticatedUser();
-      const input = {
-        id: userData.attributes.sub,
-        isActive: !car.isActive,
-      }
-      const updatedCarData = await API.graphql(
-        graphqlOperation(updateCar, { input })
-      )
-      setCar(updatedCarData.data.updateCar);
+    
+     // setCar(updatedCarData.data.updateCar);
     } catch (e) {
       console.error(e);
     }
@@ -97,17 +70,7 @@ const HomeScreen = () => {
     const { latitude, longitude, heading } = event.nativeEvent.coordinate
     // Update the car and set it to active
     try {
-      const userData = await Auth.currentAuthenticatedUser();
-      const input = {
-        id: userData.attributes.sub,
-        latitude,
-        longitude,
-        heading,
-      }
-      const updatedCarData = await API.graphql(
-        graphqlOperation(updateCar, { input })
-      )
-      setCar(updatedCarData.data.updateCar);
+      //setCar(updatedCarData.data.updateCar);
     } catch (e) {
       console.error(e);
     }
@@ -115,56 +78,39 @@ const HomeScreen = () => {
 
   const onDirectionFound = (event) => {
     console.log("Direction found: ", event);
-    if (order) {
-      setOrder({
-        ...order,
-        distance: event.distance,
-        duration: event.duration,
-        pickedUp: order.pickedUp || event.distance < 0.2,
-        isFinished: order.pickedUp && event.distance < 0.2,
-      })
-    }
+   
   }
 
   const getDestination = () => {
-    if (order && order.pickedUp) {
-      return {
-        latitude: order.destLatitude,
-        longitude: order.destLongitude,
-      }
-    }
-    return {
-      latitude: order.originLatitude,
-      longitude: order.oreiginLongitude,
-    }
+   
   }
 
   const renderBottomTitle = () => {
-    if (order && order.isFinished) {
-      return (
-        <View style={{ alignItems: 'center' }}>
-          <View style={{flexDirection: 'row', alignItems: 'center',justifyContent: 'center', backgroundColor: '#cb1a1a', width: 200, padding: 10,  }}>
-            <Text style={{color: 'white', fontWeight: 'bold'}}>COMPLETE {order.type}</Text>
-          </View>
-          <Text style={styles.bottomText}>{order.user.username}</Text>
-        </View>
-      )
-    }
+    // if (order && order.isFinished) {
+    //   return (
+    //     <View style={{ alignItems: 'center' }}>
+    //       <View style={{flexDirection: 'row', alignItems: 'center',justifyContent: 'center', backgroundColor: '#cb1a1a', width: 200, padding: 10,  }}>
+    //         <Text style={{color: 'white', fontWeight: 'bold'}}>COMPLETE {order.type}</Text>
+    //       </View>
+    //       <Text style={styles.bottomText}>{order.user.username}</Text>
+    //     </View>
+    //   )
+    // }
 
-    if (order && order.pickedUp) {
-      return (
-        <View style={{ alignItems: 'center' }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text>{order.duration ? order.duration.toFixed(1) : '?'} min</Text>
-            <View style={{ backgroundColor: '#d41212', marginHorizontal: 10, width: 30, height: 30, alignItems:'center', justifyContent: 'center', borderRadius: 20}}>
-              <FontAwesome name={"user"} color={"white"} size={20} />
-            </View>
-            <Text>{order.distance ? order.distance.toFixed(1) : '?'} km</Text>
-          </View>
-          <Text style={styles.bottomText}>Dropping off {order?.user?.username}</Text>
-        </View>
-      )
-    }
+    // if (order && order.pickedUp) {
+    //   return (
+    //     <View style={{ alignItems: 'center' }}>
+    //       <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    //         <Text>{order.duration ? order.duration.toFixed(1) : '?'} min</Text>
+    //         <View style={{ backgroundColor: '#d41212', marginHorizontal: 10, width: 30, height: 30, alignItems:'center', justifyContent: 'center', borderRadius: 20}}>
+    //           <FontAwesome name={"user"} color={"white"} size={20} />
+    //         </View>
+    //         <Text>{order.distance ? order.distance.toFixed(1) : '?'} km</Text>
+    //       </View>
+    //       <Text style={styles.bottomText}>Dropping off {order?.user?.username}</Text>
+    //     </View>
+    //   )
+    // }
 
     if (order) {
       return (
@@ -192,7 +138,6 @@ const HomeScreen = () => {
     <View>
       <MapView
         style={{width: '100%', height: Dimensions.get('window').height - 150}}
-        provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         onUserLocationChange={onUserLocationChange}
         initialRegion={{
@@ -265,13 +210,7 @@ const HomeScreen = () => {
         <Entypo name={"menu"} size={30} color="#4a4a4a" />
       </View>
 
-      {newOrders.length > 0 && !order && <NewOrderPopup
-        newOrder={newOrders[0]}
-        duration={2}
-        distance={0.5}
-        onDecline={onDecline}
-        onAccept={() => onAccept(newOrders[0])}
-      />}
+   
     </View>
   );
 };

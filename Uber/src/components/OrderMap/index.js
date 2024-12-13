@@ -3,13 +3,17 @@ import { Image, StyleSheet } from "react-native";
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import { View, Dimensions, Alert,Text } from "react-native";
 import CreateRide from "../CreateRide"
+import listenForDriverResponses from "../LIstenForResponse";
 import Spinner from "react-native-loading-spinner-overlay";
+import { useSelector,useDispatch } from 'react-redux';
 const OrderMap = ({ origin,destination }) => {
-  const [loading, setLoading] = useState(true);
-  console.log("Dia diem nhap vao",origin.value,destination.description)
+  const dispatch=useDispatch()
+  const {isLoading} = useSelector(state => state.app);
+  console.log("loading lala",isLoading)
   useEffect(()=>{
     console.log("da vao")
-   CreateRide(origin.value,destination.description )
+   CreateRide(origin.value,destination.description,dispatch )
+
   },[])
   const getImage = () => {
     if (type.type === 'Xe máy tiết kiệm') {
@@ -31,13 +35,13 @@ const OrderMap = ({ origin,destination }) => {
     <View style={styles.container}>
       {/* Hiển thị spinner nếu đang loading */}
       <Spinner
-        visible={loading}
+        visible={isLoading}
         textContent={"Đang tìm tài xế cho bạn..."}
         textStyle={styles.spinnerTextStyle}
       />
 
       {/* Nội dung hiển thị khi không còn loading */}
-      {!loading && <Text style={styles.successText}>Tài xế đã được tìm thấy!</Text>}
+      {!isLoading && <Text style={styles.successText}>Tài xế đã được tìm thấy!</Text>}
     </View>
   )
 };

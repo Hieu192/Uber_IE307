@@ -33,7 +33,10 @@ const slice = createSlice({
     updateTab(state, action) {
       state.tab = action.payload.tab;
     },
-
+    updateLoading(state, action) {
+      console.log("đang cập nhật loadingloading")
+      state.isLoading = action.payload;
+    },
     openSnackBar(state, action) {
       console.log(action.payload);
       state.snackbar.open = true;
@@ -55,7 +58,18 @@ const slice = createSlice({
 
 // Reducer
 export default slice.reducer;
-
+export const {
+  fetchCallLogs,
+  fetchUser,
+  updateUser,
+  toggleSideBar,
+  updateSideBarType,
+  updateTab,
+  updateLoading,
+  openSnackBar,
+  closeSnackBar,
+  updateUsers,
+} = slice.actions;
 // ----------------------------------------------------------------------
 
 

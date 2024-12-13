@@ -80,9 +80,6 @@ const OrderScreen = () => {
       <View style={{height: Dimensions.get('window').height - 200}}>
         <OrderMap car={car} origin={originPlace} destination={destinationPlace}/>
       </View>
-      <View>
-        <Text>Trạng thái đơn hàng : {order?.status}</Text>
-      </View>
     </View>
   );
 };

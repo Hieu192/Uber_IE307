@@ -30,6 +30,7 @@ const showPopup = (notificationId) => {
       {
         text: "Từ chối",
         onPress: () => {
+          console.log("bạn đã từ chối chuyến xe")
           updateNotificationStatus(notificationId, "rejected");
         },
         style: "cancel",

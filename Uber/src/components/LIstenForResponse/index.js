@@ -1,28 +1,23 @@
 // ListenForResponses.js
 import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
+import { View, Dimensions, Text, Alert } from "react-native";
+import {updateLoading} from "../../redux/slices/app"
+const listenForDriverResponses = (rideId,dispatch) => {
+  const rideRef = doc(db, "rides", rideId);
 
-const listenForDriverResponses = (rideId) => {
-  const responsesRef = collection(db, "rides", rideId, "responses");
+  const unsubscribe = onSnapshot(rideRef, async (snapshot) => {
+    const rideData = snapshot.data();
 
-  const unsubscribe = onSnapshot(responsesRef, async (snapshot) => {
-    snapshot.docChanges().forEach(async (change) => {
-      if (change.type === "added") {
-        const { driverId } = change.doc.data();
-        console.log("Tài xế nhận cuốc:", driverId);
-
-        // Cập nhật trạng thái cuốc xe và tài xế
-        await updateDoc(doc(db, "rides", rideId), {
-          status: "accepted",
-          acceptedBy: driverId,
-        });
-
-        console.log("Cuốc xe đã được nhận bởi tài xế:", driverId);
-
-        // Ngừng lắng nghe
-        unsubscribe();
-      }
-    });
+    if (rideData && rideData.status === "accepted" && rideData.driver_id) {
+      dispatch(updateLoading(false))
+      const driverId = rideData.driver_id;
+      Alert.alert("Tài xế có mã ",driverId," đã nhận chuyến xe của bạn ")
+      // Thực hiện thông báo hoặc xử lý việc tài xế nhận cuốc
+      console.log("Cuốc xe đã được nhận bởi tài xế:", driverId);
+      // Ngừng lắng nghe khi đã nhận cuốc
+      unsubscribe();
+    }
   });
 
   return unsubscribe; // Dùng để dừng lắng nghe nếu cần
