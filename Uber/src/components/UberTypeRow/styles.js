@@ -34,6 +34,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 5,
   },
+  originalPrice: {
+    fontSize: 14,
+    color: '#5d5d5d',
+    textDecorationLine: 'line-through',
+  },
 });
 
 export default styles;
