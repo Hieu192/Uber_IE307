@@ -1,21 +1,32 @@
-import React from "react";
+import React, { use, useEffect } from "react";
 import { View, Image, Text, Pressable } from "react-native";
 import styles from './styles.js';
 
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useDispatch, useSelector } from "react-redux";
+import { setPrice } from "../../redux/slices/methodPayload.js";
 
 const UberTypeRow = (props) => {
   const {type, onPress, isSelected, distance} = props;
-  console.log("distance:::", distance)
+  console.log("type-id :::", type.id )
+  const dispatch = useDispatch();
+  const applyFinalPrice = useSelector((state) => state.method.applyFinalPrice);
+  const applyPrice = useSelector((state) => state.method.applyPrice);
+  const applyIdSelect = useSelector((state) => state.method.applyIdSelect);
+  console.log("applyIdSelect:::", applyIdSelect)
+  console.log("applyPrice:::", applyPrice)
+  console.log("applyFinalPrice:::", applyFinalPrice)
+  console.log("isSelected:::", isSelected)
   const distanceNumber = parseInt(distance, 10);
   const calculatePrice = () => {
     const basePrice = 1.5;
-    const pricePerKm = 1.5;
     const price = basePrice + (type.pricePerKm * distanceNumber);
     return price;
   }
   const price = calculatePrice();
   const price1 = Math.round(price / 1000) * 1000
+  const formattedOriginalPrice = (Math.round(applyPrice / 1000) * 1000).toLocaleString("de-DE");
+  const formattedDiscountedPrice = (Math.round(applyFinalPrice / 1000) * 1000).toLocaleString("de-DE");
   const price2 = price1.toLocaleString("de-DE")
   const getImage = () => {
     if (type.type === 'Xe máy tiết kiệm') {
@@ -35,6 +46,9 @@ const UberTypeRow = (props) => {
     // }
     return require('../../assets/images/taxi-1.png');
   }
+  if(isSelected) {
+    dispatch(setPrice(price1))
+  }
 
   return (
     <Pressable
@@ -43,7 +57,6 @@ const UberTypeRow = (props) => {
         backgroundColor: isSelected ? '#efefef' : 'white',
       }]}
     >
-
       {/*  Image */}
       <Image
         style={styles.image}
@@ -62,7 +75,18 @@ const UberTypeRow = (props) => {
       </View>
       <View style={styles.rightContainer}>
         {/* <Ionicons name={'pricetag'} size={18} color={'#42d742'} /> */}
-        <Text style={styles.price}>{price2}đ</Text>
+        {
+          (type.id != applyIdSelect) ? (
+            <Text style={styles.price}>{price2}đ</Text>
+            ) : ((applyFinalPrice < applyPrice)  ? (
+              <View>
+                <Text style={[styles.price, { color: 'green' }]}>{formattedDiscountedPrice}đ</Text>
+                <Text style={styles.originalPrice}>{formattedOriginalPrice}đ</Text>
+              </View>
+            ) : (
+              <Text style={styles.price}>{formattedOriginalPrice}đ</Text>
+            ))
+        }
       </View>
     </Pressable>
   );

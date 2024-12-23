@@ -6,23 +6,23 @@ import UberTypes from "../../components/UberTypes";
 import theme from "../../theme";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import axiosInstance from "../../utils/axios";
+import { useSelector } from "react-redux";
 
 const SearchResults = (props) => {
-  const typeState = useState(null);
+  const typeState = useState(0);
   const route = useRoute();
   const navigation = useNavigation();
   const { originPlace, destinationPlace } = route.params;
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
   const [distance, setDistance] = useState(null);
-  console.log("dia diem di",originPlace)
-  console.log("dia diem den",destinationPlace)
+
+  console.log("typeState:::", typeState);
   const onSubmit = async (originPlace, destinationPlace) => {
     const [type] = typeState;
     if (!type) {
       return;
     }
-    // submit to server
     try {
       const date = new Date();
       navigation.navigate("OrderPage", { originPlace, destinationPlace });

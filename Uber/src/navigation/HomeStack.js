@@ -9,6 +9,7 @@ import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import SearchResultsStack from "./SearchResultsStack";
+import DiscountScreen from "../screens/Discount";
 
 const Stack = createStackNavigator();
 
@@ -37,6 +38,10 @@ const HomeStack = () => {
       <Stack.Screen name={"checkoutType"} component={CheckoutType} options={{
           headerShown: true, 
           title: "Phương thức thanh toán",
+        }}/>
+              <Stack.Screen name={"Discount"} component={DiscountScreen} options={{
+          headerShown: true, 
+          title: "Ưu đãi của bạn",
         }}/>
       <Stack.Screen name={"OrderPage"} component={OrderScreen} options={{
           headerShown: true, 
