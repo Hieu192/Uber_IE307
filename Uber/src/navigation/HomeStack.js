@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import SearchResultsStack from "./SearchResultsStack";
 import DiscountScreen from "../screens/Discount";
 
+import FindDriver from "../screens/FindDriver";
 const Stack = createStackNavigator();
 
 const HomeStack = () => {
@@ -43,9 +44,9 @@ const HomeStack = () => {
           headerShown: true, 
           title: "Ưu đãi của bạn",
         }}/>
-      <Stack.Screen name={"OrderPage"} component={OrderScreen} options={{
+      <Stack.Screen name={"FindDriver"} component={FindDriver} options={{
           headerShown: true, 
-          title: "Thanh toán",
+          title: "Tìm tài xế ",
         }}/>
     </Stack.Navigator>
   );

@@ -101,7 +101,7 @@ const RouteMap = ({ origin, destination }) => {
           <Marker coordinate={originLocation} title={"Origin"} pinColor={'red'}/>
         )}
         {destinationLocation && (
-          <Marker coordinate={destinationLocation} title={"Destination"}pinColor={'blue'} />
+          <Marker coordinate={destinationLocation} title={"Destination"}pinColor={'green'} />
         )}
       </MapView>
     )

@@ -6,15 +6,18 @@ import {
   where,
   getDocs,
   serverTimestamp,
-  updateDoc
+  updateDoc,
+  deleteDoc,
+  doc
 } from "firebase/firestore";
 import { db } from "../../../firebaseConfig";
 import listenForDriverResponses from "../LIstenForResponse";
 import {useDispatch} from "react-redux"
-import {updateLoading} from "../../redux/slices/app"
+import {updateLoading,updateRide} from "../../redux/slices/app"
 const createRide = async (start_location, end_location,dispatch) => {
   try {
-    console.log("đang xử lílí")
+
+    console.log("đang xử lí")
     dispatch(updateLoading(true))
     // Tạo cuốc xe trong Firestore
     const rideRef = await addDoc(collection(db, "rides"), {
@@ -23,6 +26,7 @@ const createRide = async (start_location, end_location,dispatch) => {
       createdAt: new Date(),
       status: "pending", // Trạng thái ban đầu
     });
+    dispatch(updateRide(rideRef.id))
     listenForDriverResponses(rideRef.id,dispatch)
     console.log("Cuốc xe được tạo với ID:", rideRef.id);
     createRideNotification(rideRef.id);
@@ -54,4 +58,22 @@ async function createRideNotification(ride_id) {
     console.error("Lỗi khi gửi thông báo:", error);
   }
 }
+export const deleteDocuments = async (collectionName, limit) => {
+  try {
+    const colRef = collection(db, collectionName);
+    const querySnapshot = await getDocs(colRef);
+    const docsToDelete = querySnapshot.docs.slice(0, limit); // Lấy chỉ số lượng document cần xóa
+
+    // Xóa từng document
+    for (const docSnapshot of docsToDelete) {
+      await deleteDoc(doc(db, collectionName, docSnapshot.id));
+    }
+
+    console.log(`${docsToDelete.length} documents deleted successfully!`);
+  } catch (error) {
+    console.error('Error deleting documents: ', error);
+  }
+};
+
+
 export default createRide;
