@@ -25,7 +25,7 @@ const SearchResults = (props) => {
     // submit to server
     try {
       const date = new Date();
-      navigation.navigate("OrderPage", { originPlace, destinationPlace });
+      navigation.navigate("FindDriver", { originPlace, destinationPlace });
     } catch (e) {
       console.error(e);
     }

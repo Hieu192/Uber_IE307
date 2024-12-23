@@ -6,7 +6,7 @@ import { v4 } from "uuid";
 const initialState = {
   user: {},
   users: [], // all users of app who are not friends and not requested yet
-  room_id: null,
+  ride_id: null,
   isLoading: false,
 };
 
@@ -14,44 +14,21 @@ const slice = createSlice({
   name: "app",
   initialState,
   reducers: {
-    fetchCallLogs(state, action) {
-      state.call_logs = action.payload.call_logs;
-    },
     fetchUser(state, action) {
       state.user = action.payload.user;
     },
     updateUser(state, action) {
       state.user = action.payload.user;
     },
-    // Toggle Sidebar
-    toggleSideBar(state) {
-      state.sideBar.open = !state.sideBar.open;
-    },
-    updateSideBarType(state, action) {
-      state.sideBar.type = action.payload.type;
-    },
-    updateTab(state, action) {
-      state.tab = action.payload.tab;
-    },
     updateLoading(state, action) {
-      console.log("đang cập nhật loadingloading")
       state.isLoading = action.payload;
-    },
-    openSnackBar(state, action) {
-      console.log(action.payload);
-      state.snackbar.open = true;
-      state.snackbar.severity = action.payload.severity;
-      state.snackbar.message = action.payload.message;
-    },
-    closeSnackBar(state) {
-      console.log("This is getting executed");
-      state.snackbar.open = false;
-      state.snackbar.message = null;
     },
     updateUsers(state, action) {
       state.users = action.payload.users;
     },
-
+    updateRide(state, action) {
+      state.ride_id = action.payload;
+    },
  
   },
 });
@@ -59,16 +36,11 @@ const slice = createSlice({
 // Reducer
 export default slice.reducer;
 export const {
-  fetchCallLogs,
   fetchUser,
   updateUser,
-  toggleSideBar,
-  updateSideBarType,
-  updateTab,
   updateLoading,
-  openSnackBar,
-  closeSnackBar,
   updateUsers,
+  updateRide
 } = slice.actions;
 // ----------------------------------------------------------------------
 

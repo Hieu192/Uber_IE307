@@ -6,6 +6,7 @@ import CreateRide from "../CreateRide"
 import listenForDriverResponses from "../LIstenForResponse";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useSelector,useDispatch } from 'react-redux';
+import RippleDot from "../RippleDot"
 const OrderMap = ({ origin,destination }) => {
   const dispatch=useDispatch()
   const {isLoading} = useSelector(state => state.app);
@@ -15,31 +16,17 @@ const OrderMap = ({ origin,destination }) => {
    CreateRide(origin.value,destination.description,dispatch )
 
   },[])
-  const getImage = () => {
-    if (type.type === 'Xe máy tiết kiệm') {
-      return require('../../assets/images/bike-1.png');
-    }
-    if (type.type === 'Xe máy Bình Dương') {
-      return require('../../assets/images/bike-1.png');
-    }
-    if (type.type === 'Ô tô tiết kiệm') {
-      return require('../../assets/images/taxi-2.png');
-    }
-    if (type.type === 'Ô tô Bình Dương') {
-      return require('../../assets/images/taxi-2.png');
-    }
-    return require('../../assets/images/taxi-1.png');
-  }
 
   return (
     <View style={styles.container}>
       {/* Hiển thị spinner nếu đang loading */}
-      <Spinner
+      {/* <Spinner
         visible={isLoading}
         textContent={"Đang tìm tài xế cho bạn..."}
         textStyle={styles.spinnerTextStyle}
-      />
-
+      /> */}
+      <Text style={{padding:"20",fontSize:20}}>Hệ thống đang tìm tài xế phù hợp </Text>
+       <RippleDot/>
       {/* Nội dung hiển thị khi không còn loading */}
       {!isLoading && <Text style={styles.successText}>Tài xế đã được tìm thấy!</Text>}
     </View>
