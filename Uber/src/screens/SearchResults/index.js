@@ -6,8 +6,10 @@ import UberTypes from "../../components/UberTypes";
 import theme from "../../theme";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import axiosInstance from "../../utils/axios";
-
+import { useSelector, useDispatch } from "react-redux";
+import {updateRide} from  "../../redux/slices/app"
 const SearchResults = (props) => {
+    const dispatch = useDispatch();
   const typeState = useState(null);
   const route = useRoute();
   const navigation = useNavigation();
@@ -15,8 +17,6 @@ const SearchResults = (props) => {
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
   const [distance, setDistance] = useState(null);
-  console.log("dia diem di",originPlace)
-  console.log("dia diem den",destinationPlace)
   const onSubmit = async (originPlace, destinationPlace) => {
     const [type] = typeState;
     if (!type) {
@@ -49,7 +49,7 @@ const SearchResults = (props) => {
         destinationResponse.data.result.geometry.location;
       setOriginLocation({ latitude: latOrigin, longitude: lngOrigin });
       setDestinationLocation({latitude: latDestination,longitude: lngDestination,});
-      console.log("Gia tri phan hoi la ::", latOrigin, lngOrigin);
+      //console.log("Gia tri phan hoi la ::", latOrigin, lngOrigin);
       const directionResponse = await axiosInstance.get("/Direction", {
         params: {
           origin: latOrigin + "," + lngOrigin,
@@ -58,7 +58,7 @@ const SearchResults = (props) => {
           vehicle: "bike", //car, bike, taxi, truck, hd
         },
       });
-      console.log("Gia tri phan hoi la directionResponse::", directionResponse.data.routes[0].legs[0].distance.text);
+     // console.log("Gia tri phan hoi la directionResponse::", directionResponse.data.routes[0].legs[0].distance.text);
       setDistance(directionResponse.data.routes[0].legs[0].distance.text);
       // setDirection(
       //   decodePolyline(

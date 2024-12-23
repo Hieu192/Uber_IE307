@@ -8,26 +8,31 @@ import {
   serverTimestamp,
   updateDoc,
   deleteDoc,
-  doc
+  doc,
+  GeoPoint,
+  getDoc
 } from "firebase/firestore";
 import { db } from "../../../firebaseConfig";
 import listenForDriverResponses from "../LIstenForResponse";
-import {useDispatch} from "react-redux"
-import {updateLoading,updateRide} from "../../redux/slices/app"
-const createRide = async (start_location, end_location,dispatch) => {
+import { updateLoading, createRide } from "../../redux/slices/app";
+const CreateRide = async (dispatch,ride) => {
   try {
-
-    console.log("đang xử lí")
-    dispatch(updateLoading(true))
+    console.log("đang xử lí");
+    console.log("chuyến xe là ",ride)
+    dispatch(updateLoading(true));
     // Tạo cuốc xe trong Firestore
+
     const rideRef = await addDoc(collection(db, "rides"), {
-      start_location,
-      end_location,
+      start_location:ride.start_location,
+      end_location:ride.end_location,
       createdAt: new Date(),
       status: "pending", // Trạng thái ban đầu
     });
-    dispatch(updateRide(rideRef.id))
-    listenForDriverResponses(rideRef.id,dispatch)
+    console.log(rideRef)
+    const rideSnapshot = await getDoc(rideRef);
+    const rideData = rideSnapshot.data();
+     dispatch(createRide({id:rideRef.id,data:rideData}));
+    listenForDriverResponses(rideRef.id, dispatch);
     console.log("Cuốc xe được tạo với ID:", rideRef.id);
     createRideNotification(rideRef.id);
   } catch (error) {
@@ -49,7 +54,7 @@ async function createRideNotification(ride_id) {
         ride_id,
         driver_id: doc.id,
         createdAt: new Date(),
-        status:"pending"
+        status: "pending",
       });
       await updateDoc(doc.ref, { isAvailable: false });
     });
@@ -71,9 +76,8 @@ export const deleteDocuments = async (collectionName, limit) => {
 
     console.log(`${docsToDelete.length} documents deleted successfully!`);
   } catch (error) {
-    console.error('Error deleting documents: ', error);
+    console.error("Error deleting documents: ", error);
   }
 };
 
-
-export default createRide;
+export default CreateRide;

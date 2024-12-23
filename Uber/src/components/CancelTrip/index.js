@@ -1,38 +1,44 @@
-
-
 // CancelTrip.js
 import {
-    collection,
-    addDoc,
-    query,
-    where,
-    getDocs,
-    serverTimestamp,
-    updateDoc,
-    deleteDoc,
-    doc
-  } from "firebase/firestore";
-  import { db } from "../../../firebaseConfig";
-  import listenForDriverResponses from "../LIstenForResponse";
-  import {useDispatch} from "react-redux"
-  import {updateLoading} from "../../redux/slices/app"
-  
- const CancelTrip = async (ride_id) => {
-    try {
+  doc,
+  getDoc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db } from "../../../firebaseConfig";
 
-        await updateDoc(doc(db, "rides", ride_id), {
-            status: "canceled", // Cập nhật trạng thái thành "canceled"
-            canceledAt: serverTimestamp(), // Có thể lưu thêm thời gian hủy
-          });
-      
-          console.log("Chuyến xe đã được hủy!");
- 
-    } catch (error) {
-      console.error("Lỗi khi tạo cuốc xe:", error);
+const CancelTrip = async (ride) => {
+  try {
+    // Lấy document của chuyến xe
+    const rideDocRef = doc(db, "rides", ride.id);
+    const rideSnapshot = await getDoc(rideDocRef);
+
+    // Kiểm tra xem document có tồn tại không
+    if (!rideSnapshot.exists()) {
+      console.error("Chuyến xe không tồn tại!");
+      return;
     }
-  };
-  
-  
-  
-  export default CancelTrip;
-  
+
+    // Lấy trạng thái hiện tại
+    const rideData = rideSnapshot.data();
+    const currentStatus = rideData.status;
+
+
+    if (currentStatus === "onTrip") {
+      return;
+    }
+
+    // Cập nhật trạng thái thành "canceled"
+    await updateDoc(rideDocRef, {
+      status: "canceled",
+      canceledAt: serverTimestamp(),
+    });
+
+    console.log("Chuyến xe đã được hủy!");
+
+  } catch (error) {
+    console.error("Lỗi khi hủy chuyến xe:", error);
+  }
+};
+
+export default CancelTrip;

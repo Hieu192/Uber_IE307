@@ -6,7 +6,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 const UberTypeRow = (props) => {
   const {type, onPress, isSelected, distance} = props;
-  console.log("distance:::", distance)
+  //console.log("distance:::", distance)
   const distanceNumber = parseInt(distance, 10);
   const calculatePrice = () => {
     const basePrice = 1.5;

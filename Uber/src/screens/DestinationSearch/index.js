@@ -28,9 +28,9 @@ const DestinationSearch = (props) => {
   const [visible, setVisible] = useState("");
   const [selectButton, setSelectButton] = useState(1);
   const navigation = useNavigation();
-  console.log("Toa do hien tai la",currentLocation)
-  console.log("originPlace::",originPlace)
-  console.log("destinationPlace::",destinationPlace)
+  // console.log("Toa do hien tai la",currentLocation)
+  // console.log("originPlace::",originPlace)
+  // console.log("destinationPlace::",destinationPlace)
   const checkNavigation = () => {
     if (isEndSuggestion) {
       navigation.replace("SearchResults", {
@@ -82,7 +82,7 @@ const DestinationSearch = (props) => {
       setIsStartSuggestion(true);
       inputDestinationRef.current.focus()
     } else {
-      setDestinationPlace(place);
+      setDestinationPlace({ place_id: place.place_id, value: place.description });
       setIsEndSuggestion(true);
       inputOriginRef.current.focus()
     }

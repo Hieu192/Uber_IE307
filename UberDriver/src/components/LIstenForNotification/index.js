@@ -25,7 +25,7 @@ const updateNotificationStatus = async (notificationId, status) => {
 const showPopup = (notificationId) => {
   Alert.alert(
     "Chuyến xe mới!", // Tiêu đề
-    "Bạn có chuyến xe càn nhận?", // Nội dung
+    "Bạn có chuyến xe cần nhận?", // Nội dung
     [
       {
         text: "Từ chối",

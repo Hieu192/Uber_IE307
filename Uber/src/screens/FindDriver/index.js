@@ -8,6 +8,7 @@ import {
   Alert,
   BackHandler,
   Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
 import CreateRide, { deleteDocuments } from "../../components/CreateRide";
@@ -15,17 +16,19 @@ import { useSelector, useDispatch } from "react-redux";
 import RippleDot from "../../components/RippleDot";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import CancelTrip from "../../components/CancelTrip";
+import { Avatar } from "react-native-elements";
 const FindDriver = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { isLoading, ride_id } = useSelector((state) => state.app);
+  const { isLoading, ride, driver } = useSelector((state) => state.app);
   const route = useRoute();
   const { originPlace, destinationPlace } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalĐriverVisible, setModalDriverVisible] = useState(true);
   const [backPressHandled, setBackPressHandled] = useState(false); // Thêm state để theo dõi nếu đã nhấn nút back
 
   useEffect(() => {
-    // deleteDocuments('rides', 50);
-     CreateRide(originPlace.value, destinationPlace.description, dispatch);
+     //deleteDocuments('rides', 20);
+   // CreateRide(originPlace.value, destinationPlace.value, dispatch);
   }, []);
 
   const showAlert = () => {
@@ -41,7 +44,7 @@ const FindDriver = ({ navigation }) => {
           text: "Có", // Nút Yes
           onPress: () => {
             setModalVisible(true);
-            CancelTrip(ride_id);
+            CancelTrip(ride);
           },
         },
       ],
@@ -65,7 +68,7 @@ const FindDriver = ({ navigation }) => {
                 onPress: () => {
                   setBackPressHandled(true); // Đánh dấu đã xử lý back
                   navigation.dispatch(e.data.action); // Thực hiện điều hướng nếu người dùng đồng ý
-                  CancelTrip(ride_id);
+                  CancelTrip(ride);
                 },
               },
             ]
@@ -84,25 +87,66 @@ const FindDriver = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 20 }}>Hệ thống đang tìm tài xế phù hợp </Text>
-      <RippleDot />
-
-      <TouchableOpacity onPress={showAlert}>
-        <Text
-          style={{
-            padding: "10",
-            fontSize: 20,
-            borderRadius: 10,
-            backgroundColor: "#ff3838",
-            color: "white",
-            marginTop: 20,
-          }}
+      {!isLoading ? (
+        <Modal
+          animationType="slide" // Kiểu animation: 'slide', 'fade', hoặc 'none'
+          transparent={true} // Cho phép modal hiển thị trong suốt
+          visible={modalĐriverVisible}
+          onRequestClose={() => setModalDriverVisible(false)}
         >
-          Hủy chuyến
-        </Text>
-      </TouchableOpacity>
-      {!isLoading && (
-        <Text style={styles.successText}>Tài xế đã được tìm thấy!</Text>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setModalDriverVisible(false);
+            }}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalView}>
+                <Avatar
+                  rounded
+                  size="large"
+                  source={{
+                    uri: "https://randomuser.me/api/portraits/men/41.jpg",
+                  }}
+                />
+                <Text style={styles.modalText}>
+                  Tài xế {driver?.fullname} đã nhận chuyến xe của bạn
+                </Text>
+                <Text style={styles.modalText}>
+                  Biển số {driver?.license_plate}
+                </Text>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => {
+                    setModalDriverVisible(false);
+                  }}
+                >
+                  <Text style={styles.textStyle}>Đóng</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+      ) : (
+        <View style={styles.container}>
+          <Text style={{ fontSize: 20 }}>
+            Hệ thống đang tìm tài xế phù hợp{" "}
+          </Text>
+          <RippleDot />
+          <TouchableOpacity onPress={showAlert}>
+            <Text
+              style={{
+                padding: "10",
+                fontSize: 20,
+                borderRadius: 10,
+                backgroundColor: "#ff3838",
+                color: "white",
+                marginTop: 20,
+              }}
+            >
+              Hủy chuyến
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
       <Modal
         animationType="slide" // Kiểu animation: 'slide', 'fade', hoặc 'none'
@@ -121,7 +165,7 @@ const FindDriver = ({ navigation }) => {
                 colors={["#004777", "#F7B801", "#A30000", "#189d00"]}
                 colorsTime={[3, 2, 1, 0]} // Màu sắc theo thời gian
                 size={80}
-                 onComplete={() => navigation.navigate('Home')} // Hành động khi kết thúc
+                onComplete={() => navigation.navigate("Home")} // Hành động khi kết thúc
               >
                 {({ remainingTime }) => <Text>{remainingTime} giây</Text>}
               </CountdownCircleTimer>

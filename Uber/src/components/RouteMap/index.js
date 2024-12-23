@@ -2,7 +2,10 @@ import React, { useEffect, useState, useRef } from "react";
 import axiosInstance from "../../utils/axios";
 import Polyline from "@mapbox/polyline";
 import MapView, { Polyline as RNPolyline, Marker } from "react-native-maps";
-import theme from "../../theme"
+import theme from "../../theme";
+import { useDispatch, useSelector } from "react-redux";
+import { updateLoading, updateRide } from "../../redux/slices/app";
+import { GeoPoint } from "firebase/firestore";
 // Giải mã polyline
 const decodePolyline = (encodedPolyline) => {
   const decodedPoints = Polyline.decode(encodedPolyline);
@@ -14,13 +17,11 @@ const decodePolyline = (encodedPolyline) => {
 };
 const RouteMap = ({ origin, destination }) => {
   const mapRef = useRef(null);
+  const dispatch = useDispatch();
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
   const [direction, setDirection] = useState([]);
-  console.log("origin::",origin)
-  console.log("destination:::",destination)
   const fetchLocation = async () => {
-    console.log("đã được gọi fetch");
     try {
       const originReponse = await axiosInstance.get("/Place/Detail", {
         params: {
@@ -32,7 +33,7 @@ const RouteMap = ({ origin, destination }) => {
           place_id: destination.place_id,
         },
       });
-      //  console.log("Gia tri phan hoi la",originReponse);
+       // console.log("Gia tri phan hoi la",originReponse);
       const { lat: latOrigin, lng: lngOrigin } =
         originReponse.data.result.geometry.location;
       const { lat: latDestination, lng: lngDestination } =
@@ -42,7 +43,16 @@ const RouteMap = ({ origin, destination }) => {
         latitude: latDestination,
         longitude: lngDestination,
       });
-      console.log("Gia tri phan hoi la", latOrigin, lngOrigin);
+      dispatch(
+        updateRide({
+          type: "location",
+          location: {
+            start:{ coordinate:new GeoPoint(parseFloat(latOrigin), parseFloat(lngOrigin)),name:origin.value},
+            end: {coordinate:new GeoPoint(parseFloat(latDestination), parseFloat(lngDestination)),name:destination.value},
+          },
+        })
+      );
+      // console.log("Gia tri phan hoi la", latOrigin, lngOrigin);
       const directionResponse = await axiosInstance.get("/Direction", {
         params: {
           origin: latOrigin + "," + lngOrigin,
@@ -74,7 +84,7 @@ const RouteMap = ({ origin, destination }) => {
       );
     }
   }, [originLocation, destinationLocation, direction]);
-  // console.log("đường đi là", direction);
+   //console.log("đường đi là", direction);
   // console.log("toa do origin", originLocation);
   // console.log("toa do destination", destinationLocation);
   return (
@@ -98,10 +108,18 @@ const RouteMap = ({ origin, destination }) => {
           />
         )}
         {originLocation && (
-          <Marker coordinate={originLocation} title={"Origin"} pinColor={'red'}/>
+          <Marker
+            coordinate={originLocation}
+            title={"Origin"}
+            pinColor={"red"}
+          />
         )}
         {destinationLocation && (
-          <Marker coordinate={destinationLocation} title={"Destination"}pinColor={'green'} />
+          <Marker
+            coordinate={destinationLocation}
+            title={"Destination"}
+            pinColor={"green"}
+          />
         )}
       </MapView>
     )

@@ -12,7 +12,7 @@ const rootPersistConfig = {
   storage:AsyncStorage,
   keyPrefix: 'redux-',
   //   whitelist: [],
-  blacklist: ["app"],
+ // blacklist: ["app"],
 };
 
 const rootReducer = combineReducers({

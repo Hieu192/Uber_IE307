@@ -5,9 +5,9 @@ import { v4 } from "uuid";
 // ----------------------------------------------------------------------
 const initialState = {
   user: {},
-  users: [], // all users of app who are not friends and not requested yet
-  ride_id: null,
+  ride: {},
   isLoading: false,
+  driver: {},
 };
 
 const slice = createSlice({
@@ -20,16 +20,30 @@ const slice = createSlice({
     updateUser(state, action) {
       state.user = action.payload.user;
     },
+    updateDriver(state, action) {
+      state.driver = action.payload;
+    },
     updateLoading(state, action) {
       state.isLoading = action.payload;
     },
-    updateUsers(state, action) {
-      state.users = action.payload.users;
+    createRide(state, action) {
+      const {id,data} = action.payload;
+      console.log("id  là",id)
+      console.log("data là",data)
+      state.ride = { id, ...data };
+      console.log({ id, ...data});
     },
     updateRide(state, action) {
-      state.ride_id = action.payload;
+       const { type,location } = action.payload;
+       console.log("giá trị startt",location.start.coordinate)
+       console.log("giá trị end",location.end.coordinate)
+       console.log(state.ride)
+      if(type=="location"){
+        state.ride.start_location=location.start
+        state.ride.end_location=location.end
+      }
+
     },
- 
   },
 });
 
@@ -39,12 +53,11 @@ export const {
   fetchUser,
   updateUser,
   updateLoading,
-  updateUsers,
-  updateRide
+  updateRide,
+  createRide,
+  updateDriver,
 } = slice.actions;
 // ----------------------------------------------------------------------
-
-
 
 // export function FetchUsers() {
 //   console.log("vai");
@@ -70,6 +83,3 @@ export const {
 //       });
 //   };
 // }
-
-
-
