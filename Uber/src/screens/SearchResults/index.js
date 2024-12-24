@@ -9,7 +9,7 @@ import axiosInstance from "../../utils/axios";
 import { useSelector, useDispatch } from "react-redux";
 import {updateRide} from  "../../redux/slices/app"
 const SearchResults = (props) => {
-  const typeState = useState(null);
+  const typeState = useState(0);
   const route = useRoute();
   const navigation = useNavigation();
   const { originPlace, destinationPlace } = route.params;

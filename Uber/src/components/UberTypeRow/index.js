@@ -4,7 +4,7 @@ import styles from './styles.js';
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
-import { setPrice } from "../../redux/slices/methodPayload.js";
+import { setDiscount, setDiscountCode, setMethod, setPrice } from "../../redux/slices/methodPayload.js";
 
 const UberTypeRow = (props) => {
   const {type, onPress, isSelected, distance} = props;
@@ -48,6 +48,10 @@ const UberTypeRow = (props) => {
   }
   if(isSelected) {
     dispatch(setPrice(price1))
+    if (type.id != applyIdSelect) {
+      // dispatch(setMethod("Tiền mặt"))
+      dispatch(setDiscountCode(null))
+    }
   }
 
   return (

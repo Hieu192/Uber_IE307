@@ -8,7 +8,7 @@ const initialState = {
   discountCode: null, // Lưu mã giảm giá
   finalPrice: 0, // Lưu giá cuối cùng
   promos: [], // Danh sách mã khuyến mãi
-  idSelect  : 0,
+  idSelect  : 0 ,
   applyPrice: null,
   applyDiscount: null,
   applyFinalPrice: null,
@@ -60,6 +60,7 @@ const methodSlice = createSlice({
     setPromos: (state, action) => {
       state.promos = action.payload; // Cập nhật danh sách mã khuyến mãi
     },
+
     resetState(state) {
       return initialState;
     },
