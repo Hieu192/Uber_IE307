@@ -19,10 +19,10 @@ const SearchResults = (props) => {
   console.log("dia diem di",originPlace)
   console.log("dia diem den",destinationPlace)
   const onSubmit = async (originPlace, destinationPlace) => {
-    const [type] = typeState;
-    if (!type) {
-      return;
-    }
+    // const [type] = typeState;
+    // if (!type) {
+    //   return;
+    // }
     try {
       const date = new Date();
       navigation.navigate("FindDriver", { originPlace, destinationPlace });
