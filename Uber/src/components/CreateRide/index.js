@@ -47,6 +47,7 @@ const CreateRide = async (dispatch,ride,user_id, vehicle) => {
 };
 async function createRideNotification(dispatch, ride_id, vehicle) {
   try {
+    console.log("Đang gửi thông báo tới tài xế", vehicle);
     // Gửi thông báo đến từng tài xế
     const driversRef = query(
       collection(db, "drivers"),

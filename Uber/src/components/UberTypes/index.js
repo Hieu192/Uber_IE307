@@ -83,7 +83,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
         <Pressable
           onPress={async () => {
             try {
-            const success = await createRide(dispatch, ride, vehicle);
+            const success = await createRide(dispatch, ride, user_id, vehicle);
               if (success) {
                 onSubmit(); // Chuyển trang nếu thành công
               } else {
