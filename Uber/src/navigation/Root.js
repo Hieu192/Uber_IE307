@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeStack from "./HomeStack";
 import CustomDrawer from "./CustomDrawer";
+import TripHistoryScreen from "../screens/TripsHistory";
 
 const Drawer = createDrawerNavigator();
 
@@ -24,9 +25,9 @@ const RootNavigator = (props) => {
           headerShown: false,
         }}/>
 
-        <Drawer.Screen name="Các chuyến đi của tôi ">
-           {() => <DummyScreen name={"Các chuyến đi của tôi "} />}
-        </Drawer.Screen>
+        <Drawer.Screen name="Các chuyến đi của tôi " component={TripHistoryScreen} options={{
+          headerShown: true,
+        }}/>
 
         <Drawer.Screen name="Trợ giúp">
           {() => <DummyScreen name={"Trợ giúp "} />}
