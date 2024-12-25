@@ -8,6 +8,7 @@ const initialState = {
   ride: {},
   isLoading: false,
   driver: {},
+  drivers: [],
 };
 
 const slice = createSlice({
@@ -42,8 +43,13 @@ const slice = createSlice({
         state.ride.start_location=location.start
         state.ride.end_location=location.end
       }
-
     },
+    setDrivers(state, action) {
+      state.drivers = action.payload
+    },
+    clearDrivers(state) {
+      state.drivers = []
+    }
   },
 });
 
@@ -56,6 +62,8 @@ export const {
   updateRide,
   createRide,
   updateDriver,
+  setDrivers,
+  clearDrivers
 } = slice.actions;
 // ----------------------------------------------------------------------
 

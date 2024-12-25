@@ -20,10 +20,10 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
   const discountCode = useSelector((state) => state.method.discountCode);
   const idSelect = useSelector((state) => state.method.idSelect);
   const applyIdSelect = useSelector((state) => state.method.applyIdSelect);
-  console.log("selectedMethod:::", selectedMethod)
-  console.log("idSelect:::", idSelect)
-  console.log("applyIdSelect:::", applyIdSelect)
-  console.log("selectedType:::", selectedType)
+  // console.log("selectedMethod:::", selectedMethod)
+  // console.log("idSelect:::", idSelect)
+  // console.log("applyIdSelect:::", applyIdSelect)
+  // console.log("selectedType:::", selectedType)
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       // Hủy hành động quay lại mặc định nếu cần
@@ -79,9 +79,9 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
       </View>
 
         <Pressable
-          onPress={() => {
+          onPress={async () => {
+            await createRide(dispatch,ride);
             onSubmit();
-            createRide(dispatch,ride);
           }}
           style={{
             backgroundColor: "green",

@@ -8,15 +8,15 @@ import { setDiscount, setDiscountCode, setMethod, setPrice } from "../../redux/s
 
 const UberTypeRow = (props) => {
   const {type, onPress, isSelected, distance} = props;
-  console.log("type-id :::", type.id )
+  // console.log("type-id :::", type.id )
   const dispatch = useDispatch();
   const applyFinalPrice = useSelector((state) => state.method.applyFinalPrice);
   const applyPrice = useSelector((state) => state.method.applyPrice);
   const applyIdSelect = useSelector((state) => state.method.applyIdSelect);
-  console.log("applyIdSelect:::", applyIdSelect)
-  console.log("applyPrice:::", applyPrice)
-  console.log("applyFinalPrice:::", applyFinalPrice)
-  console.log("isSelected:::", isSelected)
+  // console.log("applyIdSelect:::", applyIdSelect)
+  // console.log("applyPrice:::", applyPrice)
+  // console.log("applyFinalPrice:::", applyFinalPrice)
+  // console.log("isSelected:::", isSelected)
   const distanceNumber = parseInt(distance, 10);
   const calculatePrice = () => {
     const basePrice = 1.5;
