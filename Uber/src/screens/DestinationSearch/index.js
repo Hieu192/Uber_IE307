@@ -173,7 +173,7 @@ const DestinationSearch = (props) => {
           <TouchableOpacity onPress={() => handleSelectButton(2)}>
               <Text style={[
                 styles.button,
-                selectButton === 2 && styles.selectButton]}>Đề nghị trước đó</Text>
+                selectButton === 2 && styles.selectButton]}>Đề xuất</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleSelectButton(3)}>
             <Text style={[

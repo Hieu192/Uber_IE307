@@ -28,6 +28,8 @@ const DiscountScreen = () => {
   const priceState = useSelector((state) => state.method.price);
   const promos = useSelector((state) => state.method.promos); // Lấy danh sách mã khuyến mãi từ store
   const idSelect = useSelector((state) => state.method.idSelect);
+  const applyIdSelect = useSelector((state) => state.method.applyIdSelect);
+  const applyDiscountCode = useSelector((state) => state.method.applyDiscountCode);
   const dispatch = useDispatch();
   const navigation = useNavigation()
   console.log("selectedPromo:::", selectedPromo)
@@ -101,7 +103,12 @@ const DiscountScreen = () => {
     const updatedPromos = promoData.map((promo) => ({
       ...promo,
       isAvailable: promo.condition.price <= priceState,
+      isSelected:  (applyIdSelect == idSelect) && (promo.code === applyDiscountCode),
     }));
+    // const updatedPromos1 = updatedPromos.map((promo) => ({
+    //   ...promo,
+    //   isSelected: promo.id === idSelect,
+    // }));
     if (updatedPromos) {
       dispatch(setPromos(updatedPromos)); 
     }

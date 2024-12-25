@@ -18,8 +18,12 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
   const {user_id}=useSelector((state)=>state.auth)
   const selectedMethod = useSelector((state) => state.method.method);
   const applyDiscountCode = useSelector((state) => state.method.applyDiscountCode);
+  const discountCode = useSelector((state) => state.method.discountCode);
+  const idSelect = useSelector((state) => state.method.idSelect);
+  const applyIdSelect = useSelector((state) => state.method.applyIdSelect);
   console.log("selectedMethod:::", selectedMethod)
-  console.log("applyDiscountCode:::", applyDiscountCode)
+  console.log("idSelect:::", idSelect)
+  console.log("applyIdSelect:::", applyIdSelect)
   console.log("selectedType:::", selectedType)
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
@@ -43,8 +47,11 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
             distance={distance}
             type={type}
             key={type.id}
-            isSelected={type.type === selectedType}
-            onPress={() => setSelectedType(type.type)}
+            isSelected={type.id === selectedType}
+            onPress={() => {
+              setSelectedType(type.id)
+              dispatch(setIdSelect(type.id))
+            }}
           />
         ))}
       </ScrollView>
@@ -65,10 +72,10 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
           <Text style={{ color: 'black' }}>{selectedMethod || "Tiền mặt"}</Text>
         </Pressable>
         <Pressable onPress={() => {
-            navigation.navigate("checkoutType")
+            navigation.navigate("Discount")
           }}  
           style={{flex: 1,padding: 10, backgroundColor: 'white', alignItems: "center", justifyContent: "center", borderTopRightRadius: 30,}}>
-          <Text style={{ color: 'black' }}>Ưu đãi</Text>
+          <Text style={{ color: 'black' }}>{(idSelect == applyIdSelect) ? applyDiscountCode : "Ưu đãi"}</Text>
         </Pressable>
       </View>
 
