@@ -5,7 +5,7 @@ import UberTypeRow from "../UberTypeRow";
 import CreateRide from "../../components/CreateRide";
 import typesData from "../../assets/data/types";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useDispatch, useSelector,useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { resetState, setApplyIdSelect, setIdSelect } from "../../redux/slices/methodPayload.js";
 import createRide from "../CreateRide";
 const UberTypes = ({ typeState, onSubmit, distance }) => {
@@ -15,6 +15,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
   const route = useRoute();
   //console.log("route:::", route.params);
   const {ride}=useSelector((state)=>state.app)
+  const {user_id}=useSelector((state)=>state.auth)
   const selectedMethod = useSelector((state) => state.method.method);
   const applyDiscountCode = useSelector((state) => state.method.applyDiscountCode);
   console.log("selectedMethod:::", selectedMethod)
@@ -74,7 +75,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
         <Pressable
           onPress={() => {
             onSubmit();
-            createRide(dispatch,ride);
+            createRide(dispatch,ride,user_id);
           }}
           style={{
             backgroundColor: "green",
