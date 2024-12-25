@@ -15,6 +15,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
   const route = useRoute();
   //console.log("route:::", route.params);
   const {ride}=useSelector((state)=>state.app)
+  const vehicle = useSelector((state) => state.method.vehicle);
   const selectedMethod = useSelector((state) => state.method.method);
   const applyDiscountCode = useSelector((state) => state.method.applyDiscountCode);
   const discountCode = useSelector((state) => state.method.discountCode);
@@ -80,7 +81,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
         <Pressable
           onPress={async () => {
             try {
-            const success = await createRide(dispatch, ride);
+            const success = await createRide(dispatch, ride, vehicle);
               if (success) {
                 onSubmit(); // Chuyển trang nếu thành công
               } else {

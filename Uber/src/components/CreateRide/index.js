@@ -18,7 +18,7 @@ import { updateLoading, createRide } from "../../redux/slices/app";
 import { setDrivers } from "../../redux/slices/app";
 import { useDispatch } from "react-redux";
 
-const CreateRide = async (dispatch,ride) => {
+const CreateRide = async (dispatch,ride, vehicle) => {
   try {
     console.log("đang xử lí");
     console.log("chuyến xe là ",ride)
@@ -37,19 +37,19 @@ const CreateRide = async (dispatch,ride) => {
      dispatch(createRide({id:rideRef.id,data:rideData}));
     listenForDriverResponses(rideRef.id, dispatch);
     console.log("Cuốc xe được tạo với ID:", rideRef.id);
-    createRideNotification(dispatch, rideRef.id);
+    createRideNotification(dispatch, rideRef.id, vehicle);
     return "success";
   } catch (error) {
     console.error("Lỗi khi tạo cuốc xe:", error);
   }
 };
-async function createRideNotification(dispatch, ride_id) {
+async function createRideNotification(dispatch, ride_id, vehicle) {
   try {
     // Gửi thông báo đến từng tài xế
     const driversRef = query(
       collection(db, "drivers"),
       where("isAvailable", "==", true), // Lọc tài xế đang sẵn sàng
-      // where("vehicle", "==", "car") 
+      where("vehicle", "==", vehicle) // Lọc tài xế theo loại phương tiện
     );
     const driversSnapshot = await getDocs(driversRef);
     const activeDrivers = driversSnapshot.docs.map((doc) => ({
