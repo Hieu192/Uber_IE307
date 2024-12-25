@@ -17,6 +17,7 @@ import RippleDot from "../../components/RippleDot";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import CancelTrip from "../../components/CancelTrip";
 import { Avatar } from "react-native-elements";
+import MapFindDriver from "./MapFindDriver";
 const FindDriver = ({ navigation }) => {
   const dispatch = useDispatch();
   const { isLoading, ride, driver } = useSelector((state) => state.app);
@@ -57,7 +58,6 @@ const FindDriver = ({ navigation }) => {
       const unsubscribe = navigation.addListener("beforeRemove", (e) => {
         if (!backPressHandled) {
           e.preventDefault(); // Ngừng hành động quay lại mặc định
-
           Alert.alert(
             "Bạn có chắc muốn quay lại?",
             "Chuyến xe sẽ bị hủy nếu bạn rời khỏi màn hình?",
@@ -77,7 +77,6 @@ const FindDriver = ({ navigation }) => {
           e.preventDefault(); // Ngừng lại nếu back đã được xử lý
         }
       });
-
       // Cleanup listeners khi component unmount
       return () => {
         unsubscribe(); // Cleanup navigation listener
@@ -127,25 +126,30 @@ const FindDriver = ({ navigation }) => {
           </TouchableWithoutFeedback>
         </Modal>
       ) : (
-        <View style={styles.container}>
-          <Text style={{ fontSize: 20 }}>
-            Hệ thống đang tìm tài xế phù hợp{" "}
-          </Text>
-          <RippleDot />
-          <TouchableOpacity onPress={showAlert}>
-            <Text
-              style={{
-                padding: "10",
-                fontSize: 20,
-                borderRadius: 10,
-                backgroundColor: "#ff3838",
-                color: "white",
-                marginTop: 20,
-              }}
-            >
-              Hủy chuyến
+        <View style={{ flex: 1, width: Dimensions.get("window").width, }}>
+          <View style={{ flex: 4 , width: Dimensions.get("window").width, }}>
+            <MapFindDriver origin={originPlace}/>
+          </View>
+          <View style={styles.container1}>
+            <Text style={{ fontSize: 20 }}>
+              Hệ thống đang tìm tài xế phù hợp{" "}
             </Text>
-          </TouchableOpacity>
+            <RippleDot />
+            <TouchableOpacity onPress={showAlert}>
+              <Text
+                style={{
+                  padding: "10",
+                  fontSize: 20,
+                  borderRadius: 10,
+                  backgroundColor: "#ff3838",
+                  color: "white",
+                  marginTop: 20,
+                }}
+              >
+                Hủy chuyến
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
       <Modal
@@ -188,10 +192,19 @@ const FindDriver = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1 ,
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
+    backgroundColor: 'red'
+  },
+  container1 : {
+    flex: 1,
+    width: Dimensions.get("window").width,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: 'white'
   },
   spinnerTextStyle: {
     color: "#1fff1f",
