@@ -38,6 +38,7 @@ const CreateRide = async (dispatch,ride) => {
     listenForDriverResponses(rideRef.id, dispatch);
     console.log("Cuốc xe được tạo với ID:", rideRef.id);
     createRideNotification(dispatch, rideRef.id);
+    return "success";
   } catch (error) {
     console.error("Lỗi khi tạo cuốc xe:", error);
   }
@@ -47,7 +48,8 @@ async function createRideNotification(dispatch, ride_id) {
     // Gửi thông báo đến từng tài xế
     const driversRef = query(
       collection(db, "drivers"),
-      where("isAvailable", "==", true) // Lọc tài xế đang sẵn sàng
+      where("isAvailable", "==", true), // Lọc tài xế đang sẵn sàng
+      // where("vehicle", "==", "car") 
     );
     const driversSnapshot = await getDocs(driversRef);
     const activeDrivers = driversSnapshot.docs.map((doc) => ({

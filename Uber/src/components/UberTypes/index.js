@@ -79,9 +79,17 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
 
         <Pressable
           onPress={async () => {
-            await createRide(dispatch,ride);
-            onSubmit();
-          }}
+            try {
+            const success = await createRide(dispatch, ride);
+              if (success) {
+                onSubmit(); // Chuyển trang nếu thành công
+              } else {
+                console.error("Create ride failed");
+                // Có thể thông báo lỗi cho người dùng nếu cần
+              }
+            } catch (error) {
+              console.error("An error occurred:", error);
+            }}}
           style={{
             backgroundColor: "green",
             padding: 10,
