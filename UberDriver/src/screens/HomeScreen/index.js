@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Notification from "../../components/Notification/index.js";
 import { updateLocation } from "../../redux/slices/app";
 const HomeScreen = () => {
+  console.log("----------------------------------------------------------------------------------")
   const dispatch = useDispatch();
   const [car, setCar] = useState(null);
   const [myPosition, setMyPosition] = useState(null);
@@ -21,8 +22,6 @@ const HomeScreen = () => {
   const [newOrders, setNewOrders] = useState([]);
   const { user_id,isLoggedIn } = useSelector((state) => state.auth);
     const { notification_id } = useSelector((state) => state.app);
-  console.log(user_id);
-  console.log(myPosition);
   const requestLocationPermission = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status === "granted") {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, ImageBackground, TouchableOpacity } from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
-import {Login} from "../../redux/slices/auth"
+import {login} from "../../redux/slices/auth"
 const auth = getAuth();
 export default function SignInPage({ navigation }) {
   const dispatch=useDispatch();
@@ -32,7 +32,7 @@ export default function SignInPage({ navigation }) {
       // Đăng nhập người dùng
       const userCredential =await signInWithEmailAndPassword(auth,email, password);
       Alert.alert('Đăng nhập thành công', 'Chào mừng bạn đến với ứng dụng!');
-      dispatch(Login(userCredential.user))
+      dispatch(login(userCredential.user))
       console.log("Đăng nhập thành công:", userCredential);
       setIsLoading(false);
     } catch (error) {

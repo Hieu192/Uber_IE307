@@ -13,8 +13,6 @@ import acceptRide from "./acceptRide.js";
 import  {updateNotification,UpdateRide} from "../redux/slices/app"
 
 function listenToNotifications(driver_id,dispatch) {
-  console.log("đã vào")
-  console.log(driver_id)
   const notificationsRef = collection(db, "notifications");
   const q = query(
     notificationsRef,
@@ -23,15 +21,13 @@ function listenToNotifications(driver_id,dispatch) {
   );
   const unsubscribe = onSnapshot(q, (snapshot) => {
     snapshot.docChanges().forEach((change) => {
+      console.log("Sự thay đổi là:",change.type)
       if (change.type === "added") {
         const rideId = change.doc.data().ride_id;
         console.log("đang cập nhật")
         dispatch(UpdateRide(rideId))
         const notificationId = change.doc.id;
-       // console.log("Thông báo mới:", notification.message);
-        console.log(notificationId);
         dispatch(updateNotification(notificationId));
-        // Xử lý thông báo,hiển thị popup hoặc cập nhật giao diện
       }
     });
   });

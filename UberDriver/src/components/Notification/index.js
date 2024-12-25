@@ -6,7 +6,6 @@ import updateNotificationStatus from "../../utils/updateNotificationStatus";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import getDistance from "../../utils/getDistance";
 const Notification = () => {
-  console.log("cái nịt");
   const dispatch = useDispatch();
   const { notification_id, ride, driver_location } = useSelector(
     (state) => state.app

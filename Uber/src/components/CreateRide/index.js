@@ -18,10 +18,11 @@ import { updateLoading, createRide } from "../../redux/slices/app";
 import { setDrivers } from "../../redux/slices/app";
 import { useDispatch } from "react-redux";
 
-const CreateRide = async (dispatch,ride) => {
+const CreateRide = async (dispatch,ride,user_id) => {
   try {
     console.log("đang xử lí");
     console.log("chuyến xe là ",ride)
+    console.log("userid",user_id)
     dispatch(updateLoading(true));
     // Tạo cuốc xe trong Firestore
 

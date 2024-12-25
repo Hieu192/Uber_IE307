@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Pressable } from "react-native";
 import {DrawerContentScrollView, DrawerItemList} from '@react-navigation/drawer';
 import { useDispatch } from "react-redux";
-import {Logout} from "../redux/slices/auth"
+import {logout} from "../redux/slices/auth"
 const CustomDrawer = (props) => {
   const dispatch=useDispatch();
   return (
@@ -60,7 +60,7 @@ const CustomDrawer = (props) => {
       <DrawerItemList {...props} />
 
       {/* Make money */}
-      <Pressable onPress={() => {dispatch(Logout()) }}>
+      <Pressable onPress={() => {dispatch(logout()) }}>
         <Text style={{padding: 5, paddingLeft: 20}}>Đăng xuất</Text>
       </Pressable>
     </DrawerContentScrollView>

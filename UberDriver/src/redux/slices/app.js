@@ -29,7 +29,6 @@ const slice = createSlice({
       state.ride = action.payload;
     },
     updateLocation(state, action) {
-      console.log('Tọa độ là',action.payload)
       state.driver_location = action.payload;
     },
   },
@@ -42,7 +41,6 @@ export const { updateNotification,updateRide,updateLocation} = slice.actions;
 export function UpdateRide(rideId){
   return async (dispatch, getState) => {
     try {
-      console.log("đang fetch dữ liệu")
       const docRef = doc(db, "rides", rideId); // Tham chiếu đến document
       const docSnap = await getDoc(docRef); // Lấy dữ liệu document
       if (docSnap.exists()) {
@@ -51,7 +49,6 @@ export function UpdateRide(rideId){
           pickUpLocation: docSnap.data().start_location,
           dropOffLocation: docSnap.data().end_location,
         }));
-        console.log("Document data:", docSnap.data());
       } else {
         console.log("No such document!");
       }

@@ -1,5 +1,4 @@
 function haversineDistance(lat1, lng1, lat2, lng2) {
-   console.log("tọa độ các điểm", lat1, lng1, lat2, lng2  )
     const toRad = (value) => (value * Math.PI) / 180; // Hàm chuyển đổi độ sang radian
   
     const R = 6371; // Bán kính trái đất (km)
