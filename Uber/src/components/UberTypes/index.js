@@ -34,7 +34,6 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
       // dispatch(setIdSelect(null));
       dispatch(resetState());
     });
-
     return unsubscribe; // Cleanup khi component unmount
   }, [navigation, dispatch]);
   return (

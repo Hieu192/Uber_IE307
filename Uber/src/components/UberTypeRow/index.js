@@ -41,18 +41,17 @@ const UberTypeRow = (props) => {
     if (type.type === 'Ô tô Bình Dương') {
       return require('../../assets/images/taxi-2.png');
     }
-    // if (type.type === 'taxi-3') {
-    //   return require('../../assets/images/bike-1.png');
-    // }
     return require('../../assets/images/taxi-1.png');
   }
-  if(isSelected) {
-    dispatch(setPrice(price1))
-    if (type.id != applyIdSelect) {
-      // dispatch(setMethod("Tiền mặt"))
-      dispatch(setDiscountCode(null))
+  useEffect(() => {
+    if(isSelected) {
+      dispatch(setPrice(price1))
+      if (type.id != applyIdSelect) {
+        // dispatch(setMethod("Tiền mặt"))
+        dispatch(setDiscountCode(null))
+      }
     }
-  }
+  },[isSelected, price1, dispatch, type.id, applyIdSelect])
 
   return (
     <Pressable

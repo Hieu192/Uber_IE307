@@ -63,7 +63,7 @@ async function createRideNotification(dispatch, ride_id) {
         createdAt: new Date(),
         status: "pending",
       });
-      // await updateDoc(doc.ref, { isAvailable: false });
+      await updateDoc(doc.ref, { isAvailable: false });
     });
     console.log("Thông báo đã gửi tới tài xế.");
   } catch (error) {
