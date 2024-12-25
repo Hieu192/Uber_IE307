@@ -16,6 +16,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
   //console.log("route:::", route.params);
   const {ride}=useSelector((state)=>state.app)
   const vehicle = useSelector((state) => state.method.vehicle);
+  const {user_id}=useSelector((state)=>state.auth)
   const selectedMethod = useSelector((state) => state.method.method);
   const applyDiscountCode = useSelector((state) => state.method.applyDiscountCode);
   const discountCode = useSelector((state) => state.method.discountCode);

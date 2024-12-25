@@ -9,10 +9,12 @@ const initialState = {
   isLoggedIn: false,
   token: "",
   isLoading: false,
-  user: null,
   user_id: null,
   email: "",
   error: false,
+  avatar:"",
+  name:"",
+  isAvailable:false
 };
 
 const slice = createSlice({
@@ -23,14 +25,17 @@ const slice = createSlice({
       state.error = action.payload.error;
       state.isLoading = action.payload.isLoading;
     },
-    logIn(state, action) {
-      const {email,isLoggedIn} = action.payload;
-      state.isLoggedIn = isLoggedIn;
+    login(state, action) {
+      const {uid,email,displayName,photoURL,isAvailable} = action.payload;
+      state.user_id = uid;
       state.email = email;
+      state.avatar = photoURL;
+      state.name=displayName;
+      state.isLoggedIn=true
+      state.isAvailable=isAvailable;
     },
     logout(state) {
       state.isLoggedIn = false;
-      state.email = "";
     },
     updateRegisterEmail(state, action) {
       state.email = action.payload.email;
@@ -40,7 +45,11 @@ const slice = createSlice({
 
 // Reducer
 export default slice.reducer;
-
+export const {
+  login,
+  logout,
+  updateLoading,
+} = slice.actions;
 export function NewPassword(formValues) {
   return async (dispatch, getState) => {
     dispatch(slice.actions.updateIsLoading({ isLoading: true, error: false }));
@@ -118,16 +127,7 @@ export function ForgotPassword(formValues) {
   };
 }
 
-export function Login(response) {
-  return async (dispatch, getState) => {
-    dispatch(
-      slice.actions.logIn({
-        isLoggedIn: true,
-        email: response.email,
-      })
-    );
-  };
-}
+
 
 export function Logout() {
   return async (dispatch, getState) => {

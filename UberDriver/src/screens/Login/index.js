@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, ImageBackground, TouchableOpacity } from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
-import {Login} from "../../redux/slices/auth"
+import {login} from "../../redux/slices/auth"
 const auth = getAuth();
 export default function SignInPage({ navigation }) {
   const dispatch=useDispatch();
@@ -11,7 +11,17 @@ export default function SignInPage({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorEmail, setErrorEmail] = useState('');
   const [errorValiPass, setErrorValiPass] = useState('');
-
+  const checkUserExists = async (collectionName, uid) => {
+    const docRef = doc(db, collectionName, uid); // Tạo tham chiếu đến document
+    const docSnap = await getDoc(docRef); // Lấy document từ Firestore
+  
+    if (docSnap.exists()) {
+      console.log("User tồn tại:", docSnap.data());
+      return true; // User tồn tại
+    } else {
+      throw new Error(`Driver không tồn tại`);
+    }
+  };
   // Hàm đăng nhập
   const handleSignIn = async () => {
     // if (!email || !password) {
@@ -31,8 +41,9 @@ export default function SignInPage({ navigation }) {
     try {
       // Đăng nhập người dùng
       const userCredential =await signInWithEmailAndPassword(auth,email, password);
+      await checkUserExists("drivers",userCredential.user.uid)
       Alert.alert('Đăng nhập thành công', 'Chào mừng bạn đến với ứng dụng!');
-      dispatch(Login(userCredential.user))
+      dispatch(login(userCredential.user))
       console.log("Đăng nhập thành công:", userCredential);
       setIsLoading(false);
     } catch (error) {
