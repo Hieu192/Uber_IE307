@@ -1,5 +1,5 @@
 import { doc, getDoc, updateDoc, runTransaction } from "firebase/firestore";
-import { db } from "../../../firebaseConfig";
+import { db } from "../../firebaseConfig";
 import { View, Dimensions, Text, Alert } from "react-native";
 async function acceptRide(rideId, driverId) {
   const rideRef = doc(db, "rides", rideId);

@@ -26,6 +26,7 @@ const CreateRide = async (dispatch,ride) => {
     // Tạo cuốc xe trong Firestore
 
     const rideRef = await addDoc(collection(db, "rides"), {
+      user_id,
       start_location:ride.start_location,
       end_location:ride.end_location,
       createdAt: new Date(),

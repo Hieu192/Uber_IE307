@@ -1,26 +1,48 @@
 import React, { use, useEffect, useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  ImageBackground,
+} from "react-native";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-
+import { doc, setDoc ,GeoPoint} from "firebase/firestore";
+import { db } from "../../../firebaseConfig";
+import * as Location from "expo-location";
 const auth = getAuth();
+const createDriver = async (uid, formData) => {
+  const { fullName, email, phone, license_plate } = formData;
+  try {
+    const docRef = doc(db, "drivers", uid); 
+    const location = await Location.getCurrentPositionAsync({});
+    await setDoc(docRef, {
+      fullName,
+      email,
+      phone,
+      license_plate,
+      rating:5,
+      vehicle:"motorbike",
+      location:new GeoPoint(location.coords.latitude, location.coords.longitude),
+      isAvailable:false
+    });
+  } catch (e) {
+    console.error("Lỗi khi thêm hoặc cập nhật document:", e);
+  }
+};
+
 export default function SignUpScreen({ navigation }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [phone, setPhone] = useState("");
-  const [fullName, setfullName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  // const [errorMessage, setErrorMessage] = useState('');
-  // const [errorValiPass, setErrorValiPass] = useState('');
-  // const [errorEmail, setErrorEmail] = useState('');
-  // const [errorPhone, setErrorPhone] = useState('');
-  // const [errorFullName, setErrorFullName] = useState('');
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
     password: "",
     re_password: "",
+    license_plate: "",
   });
 
   const [errors, setErrors] = useState({
@@ -33,57 +55,57 @@ export default function SignUpScreen({ navigation }) {
 
   const validateFullName = (fullName) => {
     if (!fullName) {
-      return 'Họ và tên không được để trống!';
+      return "Họ và tên không được để trống!";
     }
-    return ''; 
+    return "";
   };
   const validatePhone = (phone) => {
     if (!phone) {
-      return 'Số điện thoại không được để trống!';
+      return "Số điện thoại không được để trống!";
     }
     // Regex kiểm tra số điện thoại Việt Nam từ 10 đến 11 chữ số
     const vietnamPhoneRegex = /^(0)(3|5|7|8|9)\d{8,9}$/;
     if (!vietnamPhoneRegex.test(phone)) {
-      return 'Số điện thoại phải 10,11 số. Vui lòng nhập chính xác số điện thoại của bạn';
+      return "Số điện thoại phải 10,11 số. Vui lòng nhập chính xác số điện thoại của bạn";
     }
-    return ''; 
+    return "";
   };
   const validateEmail = (email) => {
     if (!email) {
-      return 'Email không được để trống!';
+      return "Email không được để trống!";
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
-      return 'Email không hợp lệ!';
+      return "Email không hợp lệ!";
     }
-    return '';
+    return "";
   };
 
   const validatePassword = (password) => {
     if (!password) {
-      return 'Mật khẩu không được để trống!';
+      return "Mật khẩu không được để trống!";
     }
     if (password.length < 6) {
-      return 'Mật khẩu phải chứa ít nhất 6 ký tự!';
+      return "Mật khẩu phải chứa ít nhất 6 ký tự!";
     }
     if (!/[a-zA-Z]/.test(password)) {
-      return 'Mật khẩu phải chứa ít nhất một chữ!';
+      return "Mật khẩu phải chứa ít nhất một chữ!";
     }
     if (!/\d/.test(password)) {
-      return 'Mật khẩu phải chứa ít nhất một chữ số!';
+      return "Mật khẩu phải chứa ít nhất một chữ số!";
     }
     // if (!/[A-Z]/.test(password)) {
     //   setErrorValiPass('Mật khẩu phải chứa ít nhất một chữ in hoa!');
     // }
-    return '';
+    return "";
   };
   const validateRePassword = (re_password) => {
     if (!re_password) {
-      return 'Bạn cần nhập lại mật khẩu để xác nhận';
+      return "Bạn cần nhập lại mật khẩu để xác nhận";
     }
     if (formData.password !== re_password) {
-      return 'Mật khẩu không chính xác, vui lòng nhập lại mật khẩu!';
-    } 
-    return ''; 
+      return "Mật khẩu không chính xác, vui lòng nhập lại mật khẩu!";
+    }
+    return "";
   };
 
   const validateForm = () => {
@@ -111,13 +133,12 @@ export default function SignUpScreen({ navigation }) {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        email,
-        password
+        formData.email,
+        formData.password
       );
       Alert.alert("Đăng ký thành công", "Tài khoản đã được tạo thành công!");
-       setIsLoading(false);
-     const user = userCredential.user;
-
+      setIsLoading(false);
+      createDriver(userCredential.user.uid,formData)
       // Chuyển đến màn hình đăng nhập (hoặc trang chính)
       navigation.navigate("Login"); // Điều hướng tới trang đăng nhập (có thể thay đổi theo ý muốn)
     } catch (error) {
@@ -128,10 +149,12 @@ export default function SignUpScreen({ navigation }) {
 
   return (
     <ImageBackground
-      source={{ uri: 'https://img.lovepik.com/background/20211101/medium/lovepik-mobile-phone-wallpaper-for-tech-city-background-image_400521604.jpg' }}
+      source={{
+        uri: "https://img.lovepik.com/background/20211101/medium/lovepik-mobile-phone-wallpaper-for-tech-city-background-image_400521604.jpg",
+      }}
       style={styles.background}
     >
-    <View style={styles.overlay}>
+      <View style={styles.overlay}>
         <View style={styles.container}>
           <Text style={styles.title}>Đăng Ký</Text>
 
@@ -140,9 +163,9 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Họ và tên"
             value={formData.fullName}
             onChangeText={(text) => {
-              setFormData({ ...formData, fullName: text })
-              setErrors({ ...errors, fullName: "" })
-              }}
+              setFormData({ ...formData, fullName: text });
+              setErrors({ ...errors, fullName: "" });
+            }}
             // keyboardType="email-address"
             placeholderTextColor="#aaa"
           />
@@ -154,9 +177,9 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Số điện thoại"
             value={formData.phone}
             onChangeText={(text) => {
-              setFormData({ ...formData, phone: text })
-              setErrors({ ...errors, phone: '' })
-              }}
+              setFormData({ ...formData, phone: text });
+              setErrors({ ...errors, phone: "" });
+            }}
             // keyboardType="email-address"
             placeholderTextColor="#aaa"
           />
@@ -168,9 +191,9 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Email"
             value={formData.email}
             onChangeText={(text) => {
-              setFormData({ ...formData, email: text })
-              setErrors({ ...errors, email: '' })
-              }}
+              setFormData({ ...formData, email: text });
+              setErrors({ ...errors, email: "" });
+            }}
             keyboardType="email-address"
             placeholderTextColor="#aaa"
           />
@@ -179,12 +202,22 @@ export default function SignUpScreen({ navigation }) {
           ) : null}
           <TextInput
             style={styles.input}
+            placeholder="Biển số xe"
+            value={formData.license_plate}
+            onChangeText={(text) => {
+              setFormData({ ...formData, license_plate: text });
+              setErrors({ ...errors, license_plate: "" });
+            }}
+            placeholderTextColor="#aaa"
+          />
+          <TextInput
+            style={styles.input}
             placeholder="Mật khẩu"
             value={formData.password}
             onChangeText={(text) => {
-              setFormData({ ...formData, password: text })
-              setErrors({ ...errors, password: '' })
-              }}
+              setFormData({ ...formData, password: text });
+              setErrors({ ...errors, password: "" });
+            }}
             secureTextEntry
             placeholderTextColor="#aaa"
           />
@@ -196,9 +229,9 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Nhập lại mật khẩu"
             value={formData.re_password}
             onChangeText={(text) => {
-              setFormData({ ...formData, re_password: text })
-              setErrors({ ...errors, re_password: '' })
-              }}
+              setFormData({ ...formData, re_password: text });
+              setErrors({ ...errors, re_password: "" });
+            }}
             secureTextEntry
             placeholderTextColor="#aaa"
           />
@@ -211,13 +244,13 @@ export default function SignUpScreen({ navigation }) {
             disabled={isLoading}
           >
             <Text style={styles.buttonText}>
-              {isLoading ? 'Đang đăng ký...' : 'Đăng ký'}
+              {isLoading ? "Đang đăng ký..." : "Đăng ký"}
             </Text>
           </TouchableOpacity>
 
           <View style={styles.signupLinkContainer}>
             <Text style={styles.text}>Bạn đã có tài khoản? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
               <Text style={styles.signupLink}>Đăng nhập</Text>
             </TouchableOpacity>
           </View>
@@ -230,73 +263,73 @@ export default function SignUpScreen({ navigation }) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Tạo lớp mờ cho hình nền
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Tạo lớp mờ cho hình nền
+    justifyContent: "center",
+    alignItems: "center",
   },
   container: {
-    width: '90%',
+    width: "90%",
     padding: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderRadius: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
   },
   errorMessage: {
-    color: 'red',
+    color: "red",
     marginBottom: 10,
     fontSize: 14,
   },
   title: {
     fontSize: 28,
     marginBottom: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#333",
+    textAlign: "center",
   },
   input: {
-    width: '100%',
+    width: "100%",
     height: 50,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 16,
     paddingLeft: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
     padding: 16,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonDisabled: {
-    backgroundColor: '#A5D6A7',
+    backgroundColor: "#A5D6A7",
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 16,
   },
   signupLinkContainer: {
     marginTop: 20,
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
   },
   text: {
     fontSize: 14,
-    color: '#333',
+    color: "#333",
   },
   signupLink: {
     fontSize: 14,
-    color: '#4CAF50',
-    fontWeight: 'bold',
+    color: "#4CAF50",
+    fontWeight: "bold",
   },
 });

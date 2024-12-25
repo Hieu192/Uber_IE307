@@ -15,6 +15,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
   const route = useRoute();
   //console.log("route:::", route.params);
   const {ride}=useSelector((state)=>state.app)
+  const {user_id}=useSelector((state)=>state.auth)
   const selectedMethod = useSelector((state) => state.method.method);
   const applyDiscountCode = useSelector((state) => state.method.applyDiscountCode);
   const discountCode = useSelector((state) => state.method.discountCode);
@@ -81,6 +82,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
           onPress={async () => {
             await createRide(dispatch,ride);
             onSubmit();
+            createRide(dispatch,ride,user_id);
           }}
           style={{
             backgroundColor: "green",
