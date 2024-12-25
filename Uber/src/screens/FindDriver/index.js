@@ -196,7 +196,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
-    backgroundColor: 'red'
   },
   container1 : {
     flex: 1,

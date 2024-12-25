@@ -13,8 +13,6 @@ import {
   import  {updateNotification,UpdateRide} from "../redux/slices/app"
    const updateNotificationStatus = async (notificationId, status,driverId) => {
     try {
-      console.log('cập nhật')
-      console.log("mã thông báo",notificationId)
       const notificationRef = doc(db, "notifications", notificationId);
       await updateDoc(notificationRef, { status });
       if (status == "accepted") {

@@ -26,6 +26,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
   // console.log("idSelect:::", idSelect)
   // console.log("applyIdSelect:::", applyIdSelect)
   // console.log("selectedType:::", selectedType)
+  console.log("user id là ",user_id)
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       // Hủy hành động quay lại mặc định nếu cần
