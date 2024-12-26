@@ -1,5 +1,5 @@
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import db from "./firebaseConfig"; // Đường dẫn đến file cấu hình Firebase
+import { db } from "../../firebaseConfig"; // Đường dẫn đến file cấu hình Firebase
 
 const createOrder = async ({
   driverId,
@@ -7,24 +7,22 @@ const createOrder = async ({
   originalPrice,
   discountCode,
   finalPrice,
-  status,
   rideId,
   paymentMethod,
 }) => {
   try {
     const orderData = {
-      driverId: driverId || null, // Gán null nếu không có tài xế
-      userId,
-      rideId,
-      originalPrice,
-      discountCode: discountCode || null, // Gán null nếu không có mã giảm giá
-      finalPrice,
-      status, // Ví dụ: "paid", "pending", "canceled"
-      paymentMethod, // Ví dụ: "Credit Card", "Cash", "E-Wallet"
-      createdAt: serverTimestamp(), // Dùng serverTimestamp để lấy thời gian từ Firestore
-      updatedAt: serverTimestamp(),
+      driverId: driverId, // Gán null nếu không có tài xế
+      userId: userId,
+      rideId: rideId,
+      originalPrice: originalPrice,
+      discountCode: discountCode, // Gán null nếu không có mã giảm giá
+      finalPrice: finalPrice,
+      status: "pending", // Ví dụ: "paid", "pending", "canceled"
+      paymentMethod: paymentMethod, // Ví dụ: "Credit Card", "Cash", "E-Wallet"
+      createdAt: serverTimestamp(),
     };
-
+    console.log("Đang tạo hóa đơn với dữ liệu: ", orderData);
     // Thêm dữ liệu vào Firestore
     const docRef = await addDoc(collection(db, "orders"), orderData);
 
@@ -35,6 +33,8 @@ const createOrder = async ({
     throw new Error("Không thể tạo hóa đơn, vui lòng thử lại!");
   }
 };
+
+export default createOrder;
 
 // // Sử dụng hàm
 // (async () => {

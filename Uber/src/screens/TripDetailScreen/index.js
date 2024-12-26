@@ -1,14 +1,48 @@
-import { useEffect } from 'react';
+import { collection, query, where, getDoc, doc } from "firebase/firestore";
+import { useEffect, useState } from 'react';
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import MapView, { Marker } from 'react-native-maps';
-import moment from 'moment';
+import { db } from "../../../firebaseConfig";
+import moment from "moment";
 
 const TripDetailScreen = ({ route }) => {
+  const [driver, setDriver] = useState(null);
+  console.log("in ra driver:::",driver);
   console.log("in ra tham soos:::",route.params);  
   const {trip} = route.params; // Nhận tham số tripId
   console.log("in ra trip:::",trip);
+  const convertTimestampToDate = (prop) => {
+    if (!prop) return null;
+    const { seconds, nanoseconds } = prop;
+    if (seconds === undefined || nanoseconds === undefined) return null;
+    return new Date(seconds * 1000 + nanoseconds / 1000000); // Chuyển giây + nano thành milliseconds
+  };
+  const fetchDriverInfo = async (driverId) => {
+    try {
+      if (!driverId) throw new Error("Driver ID is required");
+      // Lấy tài liệu của tài xế từ Firestore
+      const driverRef = doc(db, "drivers", driverId); 
+      console.log("driverRef:::",driverRef);
+      const driverSnap = await getDoc(driverRef);
+      console.log("driverSnap:::",driverSnap);
+  
+      if (driverSnap.exists()) {
+        const driverData = { id: driverSnap.id, ...driverSnap.data() };
+        console.log("driverData:::",driverData);
+        setDriver(driverData);
+      } else {
+        console.error(`Không tìm thấy tài xế với ID: ${driverId}`);
+        return null;
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin tài xế:", error);
+      throw new Error("Không thể lấy thông tin tài xế");
+    }
+  };
+  useEffect(() => {
+    fetchDriverInfo(trip.driver_id)
+  }, []);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
@@ -25,12 +59,12 @@ const TripDetailScreen = ({ route }) => {
 
         <View style={styles.paymentRow}>
           <Text style={styles.label}>Phương thức thanh toán:</Text>
-          {/* <Text style={styles.value}>{trip.paymentMethod}</Text> */}
+          <Text style={styles.value}>{trip.paymentMethod}</Text>
         </View>
 
         <View style={styles.paymentRow}>
           <Text style={styles.label}>Giá gốc:</Text>
-          {/* <Text style={styles.value}>{`₫${trip.originalPrice.toLocaleString()}`}</Text> */}
+          <Text style={styles.value}>{`${trip.originalPrice}đ`}</Text>
         </View>
 
         <View style={styles.paymentRow}>
@@ -40,7 +74,7 @@ const TripDetailScreen = ({ route }) => {
 
         <View style={styles.paymentRow}>
           <Text style={styles.label}>Tổng tiền đã trả:</Text>
-          {/* <Text style={styles.value}>{`₫${trip.totalPaid.toLocaleString()}`}</Text> */}
+          <Text style={styles.value}>{`${trip.finalPrice}₫`}</Text>
         </View>
       </View>
 
@@ -51,28 +85,14 @@ const TripDetailScreen = ({ route }) => {
         {/* Địa điểm đón */}
         <View style={styles.locationRow}>
           <Text style={styles.label}>Điểm đón:</Text>
-          {/* <Text style={styles.location}>{trip.startLocation.name}</Text> */}
+          <Text style={styles.location}>{trip.start_location.name}</Text>
         </View>
 
         {/* Địa điểm đến */}
         <View style={styles.locationRow}>
           <Text style={styles.label}>Điểm đến:</Text>
-          {/* <Text style={styles.location}>{trip.endLocation.name}</Text> */}
+          <Text style={styles.location}>{trip.end_location.name}</Text>
         </View>
-
-        {/* Hiển thị bản đồ với địa điểm đón và đến */}
-        {/* <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: trip.startLocation.latitude,
-            longitude: trip.startLocation.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        >
-          <Marker coordinate={{ latitude: trip.startLocation.latitude, longitude: trip.startLocation.longitude }} />
-          <Marker coordinate={{ latitude: trip.endLocation.latitude, longitude: trip.endLocation.longitude }} />
-        </MapView> */}
       </View>
            {/* Tài xế */}
            <View style={styles.driverContainer}>
@@ -80,29 +100,29 @@ const TripDetailScreen = ({ route }) => {
 
         <View style={styles.driverRow}>
           <Text style={styles.label}>Tên tài xế:</Text>
-          {/* <Text style={styles.value}>{trip.driver.name}</Text> */}
+          <Text style={styles.value}>{driver?.fullname}</Text>
         </View>
 
         <View style={styles.driverRow}>
           <Text style={styles.label}>Đánh giá:</Text>
-          {/* <Text style={styles.value}>{trip.driver.rating} ⭐</Text> */}
+          <Text style={styles.value}>{driver?.rating} ⭐</Text>
         </View>
 
         <View style={styles.driverRow}>
           <Text style={styles.label}>Phương tiện:</Text>
-          {/* <Text style={styles.value}>{trip.driver.vehicle}</Text> */}
+          <Text style={styles.value}>{driver?.vehicle}</Text>
         </View>
 
         <View style={styles.driverRow}>
           <Text style={styles.label}>Số điện thoại:</Text>
-          {/* <Text style={styles.value}>{trip.driver.phone}</Text> */}
+          <Text style={styles.value}>{driver?.phone}</Text>
         </View>
       </View>
 
       {/* Ngày tháng chuyến đi */}
       <View style={styles.dateContainer}>
         <Text style={styles.dateText}>
-          {/* {`Ngày chuyến đi: ${moment(trip.creat).format('DD/MM/YYYY HH:mm')}`} */}
+          {`Ngày chuyến đi: ${moment(convertTimestampToDate(trip.acceptedAt)).format("DD/MM/YYYY HH:mm")}`}
         </Text>
       </View>
       <TouchableOpacity onPress={() => null }>
