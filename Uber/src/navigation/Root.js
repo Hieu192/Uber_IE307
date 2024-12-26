@@ -5,6 +5,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeStack from "./HomeStack";
 import CustomDrawer from "./CustomDrawer";
 import TripHistoryScreen from "../screens/TripsHistory";
+import TripStack from "./TripStack";
 
 const Drawer = createDrawerNavigator();
 
@@ -25,7 +26,7 @@ const RootNavigator = (props) => {
           headerShown: false,
         }}/>
 
-        <Drawer.Screen name="Các chuyến đi của tôi " component={TripHistoryScreen} options={{
+        <Drawer.Screen name="Các chuyến đi của tôi " component={TripStack} options={{
           headerShown: true,
         }}/>
 

@@ -62,12 +62,12 @@ async function createRideNotification(dispatch, ride_id, vehicle, originLocation
       console.log(doc.data());
       const { location } = doc.data();
       console.log("Tọa độ tài xế:", location.latitude, location.longitude);
-      console.log("Tọa độ điểm đến:", destinationLat, destinationLon);
+      console.log("Tọa độ điểm đến:", originLocation.coordinate.latitude, originLocation.coordinate.longitude);
       const distance = calculateDistance(
         location.latitude,
         location.longitude,
-        originLocation.latitude,
-        originLocation.longitude
+        originLocation.coordinate.latitude,
+        originLocation.coordinate.longitude
       );
       console.log("Khoảng cách giữa tài xế và điểm đến:", distance);
       if (distance <= 5 ) {
