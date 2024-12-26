@@ -8,6 +8,7 @@ const initialState = {
   discountCode: null, // Lưu mã giảm giá
   finalPrice: 0, // Lưu giá cuối cùng
   promos: [], // Danh sách mã khuyến mãi
+  vehicle: "motorbike", // Lưu loại phương tiện
   idSelect  : 0 ,
   applyPrice: null,
   applyDiscount: null,
@@ -39,6 +40,9 @@ const methodSlice = createSlice({
     setFinalPrice: (state, action) => {
       state.finalPrice = action.payload; // Cập nhật giá cuối cùng
     },
+    setVehicle: (state, action) => {
+      state.vehicle = action.payload; // Cập nhật loại phương tiện
+    },
     setIdSelect: (state, action) => {
       state.idSelect = action.payload; // Cập nhật giá cuối cùng
     },
@@ -69,7 +73,7 @@ const methodSlice = createSlice({
 
 // Export actions
 export const { setMethod, clearMethod, setPrice, setDiscount, setFinalPrice, setDiscountCode, setPromos, setApplyPrice, 
-  setApplyDiscount, setApplyFinalPrice, setApplyDiscountCode, setIdSelect, setApplyIdSelect, resetState
+  setApplyDiscount, setApplyFinalPrice, setApplyDiscountCode, setIdSelect, setApplyIdSelect, resetState, setVehicle
   } = methodSlice.actions;
 
 // Export reducer

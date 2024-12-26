@@ -112,8 +112,8 @@ export default function SignUpScreen({ navigation }) {
       console.log("email là:",email)
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        email,
-        password
+        formData.email,
+        formData.password
       );
       Alert.alert("Đăng ký thành công", "Tài khoản đã được tạo thành công!");
        setIsLoading(false);

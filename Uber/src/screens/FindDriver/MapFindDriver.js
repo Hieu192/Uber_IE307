@@ -97,7 +97,7 @@ const MapFindDriver = ({ origin }) => {
                     "longitude": driver.location.longitude,
                   }}
                   title={driver?.fullName}
-                  image={require("../../assets/images/taxi-2.png")}
+                  image={driver.vehicle === "car" ? require("../../assets/images/taxi-2.png") : require("../../assets/images/bike-1.png")}
                 />
               );
             }
