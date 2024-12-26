@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, ImageBackground, TouchableOpacity } from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc ,GeoPoint,getDoc} from "firebase/firestore";
+import { db } from "../../../firebaseConfig";
 import { useDispatch, useSelector } from "react-redux";
 import {login} from "../../redux/slices/auth"
 const auth = getAuth();

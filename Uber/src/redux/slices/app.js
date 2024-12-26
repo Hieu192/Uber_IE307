@@ -9,7 +9,8 @@ const initialState = {
   isLoading: false,
   driver: {},
   drivers: [],
-  user_location:null
+  user_location:null,
+  driver_id: null
 };
 
 const slice = createSlice({
@@ -47,6 +48,9 @@ const slice = createSlice({
     },
     clearDrivers(state) {
       state.drivers = []
+    },
+    setDriverId(state, action) {
+      state.driver_id = action.payload
     }
   },
 });
@@ -62,7 +66,8 @@ export const {
   updateDriver,
   setDrivers,
   clearDrivers,
-  updateLocation
+  updateLocation,
+  setDriverId
 } = slice.actions;
 // ----------------------------------------------------------------------
 

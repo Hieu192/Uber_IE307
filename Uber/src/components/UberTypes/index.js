@@ -80,7 +80,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
 
         <Pressable
           onPress={async () => {
-            await  createRide(dispatch,ride,user_id,vehicle);
+            await createRide(dispatch,ride,user_id,vehicle);
             onSubmit();
           }}
           style={{

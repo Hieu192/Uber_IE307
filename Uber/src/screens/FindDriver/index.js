@@ -18,6 +18,7 @@ import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import CancelTrip from "../../utils/CancelTrip";
 import { Avatar } from "react-native-elements";
 import MapFindDriver from "./MapFindDriver";
+import { use } from "react";
 const FindDriver = ({ navigation }) => {
   const dispatch = useDispatch();
   const { isLoading, ride, driver } = useSelector((state) => state.app);
@@ -84,6 +85,11 @@ const FindDriver = ({ navigation }) => {
       };
     }, [navigation, backPressHandled]) // Thêm backPressHandled vào dependency array
   );
+  useEffect(() => {
+    if (!isLoading) {
+      createOrder
+    }
+  }, [isLoading]);
 
   return (
     <View style={styles.container}>
