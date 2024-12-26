@@ -13,7 +13,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
   const navigation = useNavigation()
   const route = useRoute();
   //console.log("route:::", route.params);
-  const {ride,user_location}=useSelector((state)=>state.app)
+  const {ride}=useSelector((state)=>state.app)
   const {vehicle} = useSelector((state) => state.method);
   const {user_id}=useSelector((state)=>state.auth)
   const selectedMethod = useSelector((state) => state.method.method);
@@ -80,7 +80,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
 
         <Pressable
           onPress={async () => {
-            await  createRide(dispatch,ride,user_id,user_location,vehicle);
+            await  createRide(dispatch,ride,user_id,vehicle);
             onSubmit();
           }}
           style={{
