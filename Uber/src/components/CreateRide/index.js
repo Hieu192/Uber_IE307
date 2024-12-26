@@ -17,6 +17,7 @@ import listenForDriverResponses from "../LIstenForResponse";
 import { updateLoading, createRide } from "../../redux/slices/app";
 import { setDrivers } from "../../redux/slices/app";
 import { useDispatch } from "react-redux";
+import calculateDistance from "../../utils/GetDistance";
 
 const CreateRide = async (dispatch,ride,user_id, vehicle) => {
   try {
@@ -39,37 +40,69 @@ const CreateRide = async (dispatch,ride,user_id, vehicle) => {
      dispatch(createRide({id:rideRef.id,data:rideData}));
     listenForDriverResponses(rideRef.id, dispatch);
     console.log("Cuốc xe được tạo với ID:", rideRef.id);
-    createRideNotification(dispatch, rideRef.id, vehicle);
+    createRideNotification(dispatch, rideRef.id, vehicle, ride.start_location);
     return "success";
   } catch (error) {
     console.error("Lỗi khi tạo cuốc xe:", error);
   }
 };
-async function createRideNotification(dispatch, ride_id, vehicle) {
+async function createRideNotification(dispatch, ride_id, vehicle, originLocation) {
   try {
+    const activeDrivers = [];
     console.log("Đang gửi thông báo tới tài xế", vehicle);
     // Gửi thông báo đến từng tài xế
     const driversRef = query(
       collection(db, "drivers"),
       where("isAvailable", "==", true), // Lọc tài xế đang sẵn sàng
-      where("vehicle", "==", vehicle) // Lọc tài xế theo loại phương tiện
+      where("vehicle", "==", vehicle), // Lọc tài xế theo loại phương tiện
+
     );
     const driversSnapshot = await getDocs(driversRef);
-    const activeDrivers = driversSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    driversSnapshot.forEach((doc) => {
+      console.log(doc.data());
+      const { location } = doc.data();
+      console.log("Tọa độ tài xế:", location.latitude, location.longitude);
+      console.log("Tọa độ điểm đến:", destinationLat, destinationLon);
+      const distance = calculateDistance(
+        location.latitude,
+        location.longitude,
+        originLocation.latitude,
+        originLocation.longitude
+      );
+      console.log("Khoảng cách giữa tài xế và điểm đến:", distance);
+      if (distance <= 5 ) {
+        activeDrivers.push({ id: doc.id, ...doc.data(), distance });
+      }
+    }
+    );
+    console.log("Tài xế sẵn sàng 1km:::", activeDrivers);
+    // const activeDrivers = driversSnapshot.docs.map((doc) => ({
+    //   id: doc.id,
+    //   ...doc.data(),
+    // }));
     dispatch(setDrivers(activeDrivers));
     // Gửi thông báo tới tài xế
-    driversSnapshot.forEach(async (doc) => {
+    for (const driver of activeDrivers) {
       await addDoc(collection(db, "notifications"), {
         ride_id,
-        driver_id: doc.id,
+        driver_id: driver.id,
         createdAt: new Date(),
         status: "pending",
       });
-      await updateDoc(doc.ref, { isAvailable: false });
-    });
+    
+      // Cập nhật trạng thái của tài xế trong Firestore
+      const driverDocRef = doc(db, "drivers", driver.id);
+      await updateDoc(driverDocRef, { isAvailable: false });
+    }
+    // driversSnapshot.forEach(async (doc) => {
+    //   await addDoc(collection(db, "notifications"), {
+    //     ride_id,
+    //     driver_id: doc.id,
+    //     createdAt: new Date(),
+    //     status: "pending",
+    //   });
+    //   await updateDoc(doc.ref, { isAvailable: false });
+    // });
     console.log("Thông báo đã gửi tới tài xế.");
   } catch (error) {
     console.error("Lỗi khi gửi thông báo:", error);
