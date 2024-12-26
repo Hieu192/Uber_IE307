@@ -79,9 +79,8 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
 
         <Pressable
           onPress={async () => {
-            await createRide(dispatch,ride);
+            await createRide(dispatch,ride,user_id,user_location);
             onSubmit();
-            createRide(dispatch,ride,user_id,user_location);
           }}
           style={{
             backgroundColor: "green",

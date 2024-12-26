@@ -56,18 +56,21 @@ const sendNotificationByDistance = async (
   try {
     let hasResponse = false; // Biến kiểm tra có phản hồi hay không
     console.log("--------------------------------");
+    // Lấy danh sách tài xế đang sẵn sàng
+    const driversRef = query(
+      collection(db, "drivers"),
+      where("isAvailable", "==", true)
+    );
+    const driversSnapshot = await getDocs(driversRef);
+    const drivers = driversSnapshot.docs.map((doc) => ({
+      id: doc.id, // Lấy ID của document
+      ...doc.data(), // Lấy dữ liệu của document
+    }));
+    // Cập nhật danh sách tài xế trong phạm vi
+    dispatch(setDrivers(drivers));
     for (const radius of radiusList) {
       console.log("--------------------------------");
       console.log(`Đang gửi thông báo cho bán kính ${radius} km...`);
-
-      // Lấy danh sách tài xế đang sẵn sàng
-      const driversRef = query(
-        collection(db, "drivers"),
-        where("isAvailable", "==", true)
-      );
-      const driversSnapshot = await getDocs(driversRef);
-
-      const driversInRange = [];
 
       for (const driverDoc of driversSnapshot.docs) {
         const driverData = driverDoc.data();
@@ -88,7 +91,6 @@ const sendNotificationByDistance = async (
           distance
         );
         if (distance <= radius) {
-          driversInRange.push({ id: driverDoc.id, ...driverData });
           // Kiểm tra xem tài xế đã nhận thông báo cho chuyến đi này chưa
           const alreadyNotified = await notificationExists(
             ride_id,
@@ -124,9 +126,6 @@ const sendNotificationByDistance = async (
           }
         }
       }
-
-      // Cập nhật danh sách tài xế trong phạm vi
-      dispatch(setDrivers(driversInRange));
 
       // Lắng nghe phản hồi từ tài xế
       await new Promise((resolve, reject) => {
