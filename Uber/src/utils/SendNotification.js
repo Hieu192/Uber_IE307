@@ -57,6 +57,7 @@ const sendNotificationByDistance = async (
   try {
     let hasResponse = false; // Biến kiểm tra có phản hồi hay không
     console.log("--------------------------------");
+    console.log("Kiểm tra ::: ", center, radiusList, ride_id, vehicle);
     // Lấy danh sách tài xế đang sẵn sàng
     const driversRef = query(
       collection(db, "drivers"),

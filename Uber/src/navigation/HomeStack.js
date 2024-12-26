@@ -3,7 +3,6 @@ import HomeScreen from "../screens/HomeScreen";
 import { createStackNavigator } from '@react-navigation/stack'
 import DestinationSearch from "../screens/DestinationSearch";
 import SearchResults from "../screens/SearchResults";
-import OrderScreen from "../screens/OrderScreen";
 import CheckoutType from "../screens/CheckoutType";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
