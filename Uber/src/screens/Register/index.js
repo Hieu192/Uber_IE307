@@ -109,6 +109,7 @@ export default function SignUpScreen({ navigation }) {
     setIsLoading(true); // Bắt đầu quá trình đăng ký
 
     try {
+      console.log("email là:",email)
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,

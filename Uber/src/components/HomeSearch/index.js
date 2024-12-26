@@ -21,9 +21,8 @@ const HomeSearch = (props) => {
       <Pressable onPress={goToSearch} style={styles.inputBox}>
         <Text style={styles.inputText}>Bạn muốn đến đâu?</Text>
         <View style={styles.timeContainer}>
-          <AntDesign name={'clockcircle'} size={16} color={'#535353'} />
-          <Text>Bây giờ</Text>
-          <MaterialIcons name={'keyboard-arrow-down'} size={16} />
+          <AntDesign name={'search1'} size={16} color={'#535353'} />
+          <Text>Tìm kiếm</Text>
         </View>
       </Pressable>
 

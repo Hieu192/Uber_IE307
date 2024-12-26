@@ -19,9 +19,7 @@ const slice = createSlice({
   initialState,
   reducers: {
     login(state, action) {
-
       const {uid,email,displayName,photoURL} = action.payload;
-      console.log("uid là",uid)
       state.user_id = uid;
       state.email = email;
       state.avatar = photoURL;

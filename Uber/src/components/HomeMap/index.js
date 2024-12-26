@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Image } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-
+import { updateLocation } from "../../redux/slices/app";
+import { useDispatch } from "react-redux";
 // import cars from '../../assets/data/cars';
 
 const HomeMap = (props) => {
+  const dispatch = useDispatch();
   const [cars, setCars] = useState([]);
   const [location, setLocation] = useState(null);
   const getCurrentLocation = async () => {
     const location = await Location.getCurrentPositionAsync({});
     setLocation(location.coords);
+    dispatch(updateLocation(location.coords));
   };
   useEffect(() => {
     getCurrentLocation();

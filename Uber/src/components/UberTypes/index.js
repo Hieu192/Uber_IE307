@@ -2,19 +2,18 @@ import React, { useEffect } from "react";
 import { View, Text, Pressable, Button, ScrollView } from "react-native";
 import styles from "./styles.js";
 import UberTypeRow from "../UberTypeRow";
-import CreateRide from "../../components/CreateRide";
 import typesData from "../../assets/data/types";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { resetState, setApplyIdSelect, setIdSelect } from "../../redux/slices/methodPayload.js";
-import createRide from "../CreateRide";
+import createRide from "../../utils/CreateRide.js";
 const UberTypes = ({ typeState, onSubmit, distance }) => {
   const  dispatch = useDispatch()
   const [selectedType, setSelectedType] = typeState;
   const navigation = useNavigation()
   const route = useRoute();
   //console.log("route:::", route.params);
-  const {ride}=useSelector((state)=>state.app)
+  const {ride,user_location}=useSelector((state)=>state.app)
   const {user_id}=useSelector((state)=>state.auth)
   const selectedMethod = useSelector((state) => state.method.method);
   const applyDiscountCode = useSelector((state) => state.method.applyDiscountCode);
@@ -25,7 +24,6 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
   // console.log("idSelect:::", idSelect)
   // console.log("applyIdSelect:::", applyIdSelect)
   // console.log("selectedType:::", selectedType)
-  console.log("user id là ",user_id)
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       // Hủy hành động quay lại mặc định nếu cần
@@ -83,7 +81,7 @@ const UberTypes = ({ typeState, onSubmit, distance }) => {
           onPress={async () => {
             await createRide(dispatch,ride);
             onSubmit();
-            createRide(dispatch,ride,user_id);
+            createRide(dispatch,ride,user_id,user_location);
           }}
           style={{
             backgroundColor: "green",

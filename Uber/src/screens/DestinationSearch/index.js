@@ -28,9 +28,6 @@ const DestinationSearch = (props) => {
   const [visible, setVisible] = useState("");
   const [selectButton, setSelectButton] = useState(1);
   const navigation = useNavigation();
-  // console.log("Toa do hien tai la",currentLocation)
-  // console.log("originPlace::",originPlace)
-  // console.log("destinationPlace::",destinationPlace)
   const checkNavigation = () => {
     if (isEndSuggestion) {
       navigation.replace("SearchResults", {
@@ -99,7 +96,6 @@ const DestinationSearch = (props) => {
     setCurrentOriginPlace({ value: data.results[0].formatted_address, place_id: data.results[0].place_id });
   };
   useEffect(() => {
-    console.log("useEffect")
     const fetchLocation = async () => {
       await getCurrentLocation();
     };

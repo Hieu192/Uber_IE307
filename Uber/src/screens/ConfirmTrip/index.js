@@ -10,7 +10,7 @@ const ConfirmTrip = () => {
   const [order, setOrder] = useState(null);
   const route = useRoute();
   const {originPlace, destinationPlace}=route.params
-  console.log(route.params.id);
+
 
   // Fetch order on initial render
   useEffect(() => {

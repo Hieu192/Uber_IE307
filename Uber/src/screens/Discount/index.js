@@ -32,8 +32,7 @@ const DiscountScreen = () => {
   const applyDiscountCode = useSelector((state) => state.method.applyDiscountCode);
   const dispatch = useDispatch();
   const navigation = useNavigation()
-  console.log("selectedPromo:::", selectedPromo)
-  console.log("usePromo:::", usePromo)
+
 
   // Danh sách mã khuyến mãi
   // const [promos, setPromos] = useState([

@@ -13,8 +13,6 @@ const MapFindDriver = ({ origin }) => {
   const [originLocation, setOriginLocation] = useState(null);
   const drivers = useSelector((state) => state.app.drivers);
   const [isReady, setIsReady] = useState(false);
-  console.log("Drivers:::", drivers.length );
-  console.log("originLocation:::", originLocation);
   const fetchLocation = async () => {
     try {
       const originReponse = await axiosInstance.get("/Place/Detail", {

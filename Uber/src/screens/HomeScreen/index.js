@@ -1,7 +1,7 @@
 import React, { use, useEffect } from "react";
 import { View, Dimensions } from "react-native";
 
-import HomeMap from '../../components/HomeMap/mapbox';
+import HomeMap from '../../components/HomeMap';
 import HomeSearch from '../../components/HomeSearch';
 import { useDispatch } from "react-redux";
 import { resetState } from "../../redux/slices/methodPayload";

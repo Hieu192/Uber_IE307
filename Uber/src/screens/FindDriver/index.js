@@ -11,11 +11,11 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
-import CreateRide, { deleteDocuments } from "../../components/CreateRide";
+import CreateRide, { deleteDocuments } from "../../utils/CreateRide";
 import { useSelector, useDispatch } from "react-redux";
 import RippleDot from "../../components/RippleDot";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
-import CancelTrip from "../../components/CancelTrip";
+import CancelTrip from "../../utils/CancelTrip";
 import { Avatar } from "react-native-elements";
 import MapFindDriver from "./MapFindDriver";
 const FindDriver = ({ navigation }) => {
@@ -28,7 +28,8 @@ const FindDriver = ({ navigation }) => {
   const [backPressHandled, setBackPressHandled] = useState(false); // Thêm state để theo dõi nếu đã nhấn nút back
 
   useEffect(() => {
-     //deleteDocuments('rides', 20);
+     //deleteDocuments('rides', 10);
+     //deleteDocuments('notifications', 20);
    // CreateRide(originPlace.value, destinationPlace.value, dispatch);
   }, []);
 
