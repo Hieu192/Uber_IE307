@@ -51,6 +51,7 @@ const sendNotificationByDistance = async (
   center,
   radiusList,
   ride_id,
+  vehicle,
   dispatch
 ) => {
   try {
@@ -59,7 +60,8 @@ const sendNotificationByDistance = async (
     // Lấy danh sách tài xế đang sẵn sàng
     const driversRef = query(
       collection(db, "drivers"),
-      where("isAvailable", "==", true)
+      where("isAvailable", "==", true),
+      where("vehicle", "==", vehicle),
     );
     const driversSnapshot = await getDocs(driversRef);
     const drivers = driversSnapshot.docs.map((doc) => ({

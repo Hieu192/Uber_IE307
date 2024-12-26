@@ -18,7 +18,7 @@ import {
   import { updateLoading, createRide,setDrivers } from "../redux/slices/app";
   import { useDispatch } from "react-redux";
   
-  const CreateRide = async (dispatch,ride,user_id,user_location) => {
+  const CreateRide = async (dispatch,ride,user_id,user_location,vehicle) => {
     try {
       console.log("đang xử lí");
       console.log("chuyến xe là ",ride)
@@ -39,7 +39,7 @@ import {
        dispatch(createRide({id:rideRef.id,data:rideData}));
       listenForDriverResponses(rideRef.id, dispatch);
       console.log("Cuốc xe được tạo với ID:", rideRef.id);
-      sendNotificationByDistance(user_location,[2,5,10],rideRef.id,dispatch);
+      sendNotificationByDistance(user_location,[2,5,10],rideRef.id,vehicle,dispatch);
     } catch (error) {
       console.error("Lỗi khi tạo cuốc xe:", error);
     }
