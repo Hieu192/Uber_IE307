@@ -3,18 +3,19 @@ import { View, Text ,TouchableOpacity} from "react-native";
 import Entypo from "react-native-vector-icons/Entypo";
 import styles from './styles'
 
-const PlaceRow = ({ data,handleSelectSuggestion,type }) => {
+const PlaceRowSave = ({ data,handleSelectSuggestion,type }) => {
   console.log("data",data)
   return (
     <TouchableOpacity onPress={()=>{
-      handleSelectSuggestion(data,type)
+      // handleSelectSuggestion(data,type)
     }}>
     <View>
       <View style={styles.row}>
           <View style={styles.iconContainer}>
-            {data.description === 'Home'
-              ? <Entypo name='home' siz={20} color={'white'} />
-              : <Entypo name='location-pin' siz={20} color={'red'} />
+            {data.name === 'Home'
+              ? <Entypo name='home' siz={30} color={'white'} />
+              : (data.name === 'New') ? <Entypo name='circle-with-plus' siz={30} color={'white'} /> : 
+              <Entypo name='briefcase' siz={30} color={'white'} />
             }
           </View>
           <Text style={styles.locationText}>{data.description || data.vicinity || data.name}</Text>
@@ -26,4 +27,4 @@ const PlaceRow = ({ data,handleSelectSuggestion,type }) => {
   );
 };
 
-export default PlaceRow;
+export default PlaceRowSave;

@@ -40,6 +40,7 @@ import {
       listenForDriverResponses(rideRef.id, dispatch);
       console.log("Cuốc xe được tạo với ID:", rideRef.id);
       sendNotificationByDistance(ride.start_location.coordinate,[2,5,10],rideRef.id,vehicle,dispatch);
+      
     } catch (error) {
       console.error("Lỗi khi tạo cuốc xe:", error);
     }

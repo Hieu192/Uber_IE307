@@ -90,10 +90,10 @@ const DiscountScreen = () => {
   };
   useEffect(() => {
     const promoData = [
-      { id: "1", condition: {price: 100000}, discount: {maxDiscount: 50000, percent: 5}, code: "DISCOUNT1", description: "Giảm 5% cho đơn hàng từ 100k", isAvailable: true, isSelected: false, imageUrl: "https://via.placeholder.com/50" },
-      { id: "2", condition: {price: 200000}, discount: {maxDiscount: 50000, percent: 10}, code: "DISCOUNT2", description: "Giảm 10% cho đơn hàng từ 200k", isAvailable: true, isSelected: false, imageUrl: "https://via.placeholder.com/50" },
-      { id: "3", condition: {price: 200000}, discount: {value: 15000}, code: "DISCOUNT3", description: "Giảm 15k cho đơn hàng từ 200k", isAvailable: true, isSelected: false, imageUrl: "https://via.placeholder.com/50" },
-      { id: "4", condition: {price: 500000}, discount: {value: 50000}, code: "DISCOUNT4", description: "Giảm 50k cho đơn hàng từ 500k", isAvailable: true, isSelected: false, imageUrl: "https://via.placeholder.com/50" },
+      { id: "1", condition: {price: 100000}, discount: {maxDiscount: 50000, percent: 5}, code: "DISCOUNT1", description: "Giảm 5% cho đơn hàng từ 100k", isAvailable: true, isSelected: false, imageUrl: require("../../assets/images/discount/5%.png") },
+      { id: "2", condition: {price: 200000}, discount: {maxDiscount: 50000, percent: 10}, code: "DISCOUNT2", description: "Giảm 10% cho đơn hàng từ 200k", isAvailable: true, isSelected: false, imageUrl: require("../../assets/images/discount/10%.png") },
+      { id: "3", condition: {price: 200000}, discount: {value: 15000}, code: "DISCOUNT3", description: "Giảm 15k cho đơn hàng từ 200k", isAvailable: true, isSelected: false, imageUrl: require("../../assets/images/discount/15k.png") },
+      { id: "4", condition: {price: 500000}, discount: {value: 50000}, code: "DISCOUNT4", description: "Giảm 50k cho đơn hàng từ 500k", isAvailable: true, isSelected: false, imageUrl: require("../../assets/images/discount/50k.png") },
       // { id: "5", condition: {price: 100000}, value: {maxDiscount: 50000, value: 15000, percent: 15}, code: "VIP20", description: "Giảm 20% cho thành viên VIP", isAvailable: false, isSelected: false, imageUrl: "https://via.placeholder.com/50" },
       // { id: "6", condition: {price: 100000}, value: {maxDiscount: 50000, value: 15000, percent: 20}, code: "NEWYEAR2024", description: "Giảm 10% cho năm mới", isAvailable: false, isSelected: false, imageUrl: "https://via.placeholder.com/50" },
       // { id: "7", condition: {price: 100000}, value: {maxDiscount: 50000, value: 15000, percent: 20}, code: "NEWYEAR2024", description: "Giảm 10% cho năm mới", isAvailable: false, isSelected: false, imageUrl: "https://via.placeholder.com/50" },
@@ -125,7 +125,7 @@ const DiscountScreen = () => {
       onPress={() => showModal(item)} // Mở modal khi nhấn vào item
     >
       {/* Ảnh ở bên trái */}
-      <Image source={{ uri: item.imageUrl }} style={styles.promoImage} />
+      <Image source={ item.imageUrl } style={styles.promoImage} />
       
       <View style={styles.promoInfo}>
         <Text style={[styles.promoCode, { color: item.isAvailable ? "#333" : "#888" }]}>
@@ -138,8 +138,9 @@ const DiscountScreen = () => {
       {/* Checkbox tròn bên phải */}
       <TouchableOpacity onPress={() => togglePromoSelection(item)}>
         <MaterialIcons
-          name={item.isSelected ? "radio-button-checked" : "radio-button-unchecked"} 
+          name={item.isSelected && item.isAvailable ? "radio-button-checked" : "radio-button-unchecked"} 
           size={24}
+          disabled={item.isAvailable}
         />
       </TouchableOpacity>
     </TouchableOpacity>
@@ -273,9 +274,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   promoImage: {
-    width: 50,
+    width: 100,
     height: 50,
-    borderRadius: 25,
+    // borderRadius: 25,
     marginRight: 15, // Khoảng cách giữa ảnh và thông tin
   },
   promoInfo: {

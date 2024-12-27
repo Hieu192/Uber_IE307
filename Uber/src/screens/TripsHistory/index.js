@@ -8,11 +8,10 @@ import { useNavigation } from "@react-navigation/native";
 
 const TripHistoryScreen = () => {
   const userId = useSelector((state) => state.auth.user_id);
+  const ride = useSelector((state) => state.app.ride);
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation()
-  console.log("trip::: ", trips[0]?.createdAt);
-  console.log("wtf ::: ");
 
   const convertTimestampToDate = (prop) => {
     if (!prop) return null;
@@ -20,6 +19,9 @@ const TripHistoryScreen = () => {
     if (seconds === undefined || nanoseconds === undefined) return null;
     return new Date(seconds * 1000 + nanoseconds / 1000000); // Chuyển giây + nano thành milliseconds
   };
+  useEffect(() => {
+
+  }, [ride]);
 
   useEffect(() => {
     console.log("đang gọi trip history với user :::", userId);
@@ -27,15 +29,42 @@ const TripHistoryScreen = () => {
       try {
         const tripQuery = query(
           collection(db, "rides"),
-          where("user_id", "==", userId) // Lọc các chuyến đi của user
+          where("user_id", "==", userId), // Lọc user
+          where("status", "==", "accepted") // Lọc 
         );
         const querySnapshot = await getDocs(tripQuery);
         const tripsData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        console.log("tripsData:::", tripsData);
-        setTrips(tripsData);
+            // Lặp qua từng trip và tìm giá trong collection "orders"
+        const tripsWithPrices = await Promise.all(
+          tripsData.map(async (trip) => {
+            const orderQuery = query(
+              collection(db, "orders"),
+              where("rideId", "==", trip.id) // Truy vấn dựa trên trip.id
+            );
+            const orderSnapshot = await getDocs(orderQuery);
+
+            // Lấy giá từ order (nếu có)
+            const orderData = orderSnapshot.docs.map((doc) => doc.data());
+            console.log("orderData::: ", orderData);
+            const finalPrice = orderData[0]?.finalPrice || null; // Lấy giá từ order đầu tiên hoặc null
+            const originalPrice = orderData[0]?.originalPrice || null; // Lấy giá từ order đầu tiên hoặc null
+            const paymentMethod = orderData[0]?.paymentMethod || null; // Lấy giá từ order đầu tiên hoặc null
+            const discountCode = orderData[0]?.discountCode || null; // Lấy giá từ order đầu tiên hoặc null
+            const price = orderData[0]?.discountCode || null; // Lấy giá từ order đầu tiên hoặc null
+            return {
+              ...trip,
+              finalPrice, // Thêm giá vào trip
+              originalPrice,
+              paymentMethod,
+              discountCode
+            };
+          })
+        );
+
+        setTrips(tripsWithPrices); // Cập nhật trips với giá
       } catch (error) {
         console.error("Error fetching trip history:", error);
       } finally {
@@ -73,7 +102,9 @@ const TripHistoryScreen = () => {
               {`Đến: ${item.end_location.name}`}
           </Text>
         </View>
+        
       </View>
+      <Text style={styles.price}>{`Giá: ${item.finalPrice}đ`}</Text>
     </TouchableOpacity>
   );
 
@@ -126,8 +157,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   imageContainer: {
-    width: 70,
-    height: 70,
+    width: 50,
+    height: 50,
     borderRadius: 8,
     overflow: "hidden",
   },
@@ -141,7 +172,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   location: { 
-    fontSize: 16, 
+    fontSize: 14, 
     marginBottom: 5, 
   }, 
   dateRow: {
@@ -166,7 +197,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   price: { 
-    fontSize: 16, 
+    marginLeft: 60,
+    fontSize: 14, 
     fontWeight: "bold", 
     color: "#4caf50", 
   }, 

@@ -18,6 +18,8 @@ import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import CancelTrip from "../../utils/CancelTrip";
 import { Avatar } from "react-native-elements";
 import MapFindDriver from "./MapFindDriver";
+import { use } from "react";
+import createOrder from "../../utils/checkout";
 const FindDriver = ({ navigation }) => {
   const dispatch = useDispatch();
   const { isLoading, ride, driver } = useSelector((state) => state.app);
@@ -26,6 +28,18 @@ const FindDriver = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalĐriverVisible, setModalDriverVisible] = useState(true);
   const [backPressHandled, setBackPressHandled] = useState(false); // Thêm state để theo dõi nếu đã nhấn nút back
+  const {
+  method,
+  price,
+  discount,
+  idSelect,
+  applyPrice,
+  applyDiscount,
+  applyFinalPrice,
+  applyDiscountCode,
+  applyIdSelect
+  } = useSelector((state) => state.method);
+  const driverId = useSelector((state) => state.app.driver_id);
 
   useEffect(() => {
      //deleteDocuments('rides', 10);
@@ -84,9 +98,32 @@ const FindDriver = ({ navigation }) => {
       };
     }, [navigation, backPressHandled]) // Thêm backPressHandled vào dependency array
   );
-
+  useEffect(() => {
+    if (!isLoading) {
+      createOrder({
+        driverId: driverId,
+        userId: ride.user_id,
+        originalPrice: idSelect === applyIdSelect ? applyPrice : price,
+        discountCode: idSelect === applyIdSelect ? applyDiscountCode : null,
+        finalPrice: idSelect === applyIdSelect ? applyFinalPrice : price,
+        status: "pending",
+        rideId: ride.id,
+        paymentMethod: method,
+      })
+    }
+  }), [isLoading]
   return (
     <View style={styles.container}>
+      {/* {!isLoading && createOrder({
+        driverId: driver.id,
+        userId: ride.user_id,
+        originalPrice: idSelect === applyIdSelect ? applyPrice : price,
+        discountCode: idSelect === applyIdSelect ? applyDiscountCode : null,
+        finalPrice: idSelect === applyIdSelect ? applyFinalPrice : price,
+        status: "pending",
+        rideId: ride.id,
+        paymentMethod: method,
+      })} */}
       {!isLoading ? (
         <Modal
           animationType="slide" // Kiểu animation: 'slide', 'fade', hoặc 'none'

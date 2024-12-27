@@ -27,7 +27,7 @@ const RootNavigator = (props) => {
         }}/>
 
         <Drawer.Screen name="Các chuyến đi của tôi " component={TripStack} options={{
-          headerShown: true,
+          headerShown: false,
         }}/>
 
         <Drawer.Screen name="Trợ giúp">
