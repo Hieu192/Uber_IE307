@@ -4,6 +4,7 @@ import Entypo from "react-native-vector-icons/Entypo";
 import styles from './styles'
 
 const PlaceRow = ({ data,handleSelectSuggestion,type }) => {
+  console.log("data",data)
   return (
     <TouchableOpacity onPress={()=>{
       handleSelectSuggestion(data,type)
@@ -16,7 +17,7 @@ const PlaceRow = ({ data,handleSelectSuggestion,type }) => {
               : <Entypo name='location-pin' siz={20} color={'white'} />
             }
           </View>
-          <Text style={styles.locationText}>{data.description || data.vicinity}</Text>
+          <Text style={styles.locationText}>{data.description || data.vicinity || data.name}</Text>
         </View>
       <View style={styles.lineSuggest}></View>
     </View>

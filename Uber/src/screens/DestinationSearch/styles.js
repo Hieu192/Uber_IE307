@@ -37,6 +37,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 105,
   },
+  listView1: {
+    margin: 16,
+    position: 'absolute',
+    top: 40,
+  },
   autocompleteContainer: {
     position: 'absolute',
     top: 0,
