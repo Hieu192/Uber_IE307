@@ -9,6 +9,7 @@ import { use } from "react";
 import { useSelector } from "react-redux";
 import saveSearchHistory, { getSearchHistory } from "../../utils/SaveHistorySearch.js";
 import { getMostSearch, getMostSearchByUser } from "../../utils/suggestMap.js";
+import PlaceRowSave from "./PlaceRowSave.js";
 const homePlace = {
   description: "Home",
   geometry: { location: { lat: 48.8152937, lng: 2.4597668 } },
@@ -17,6 +18,21 @@ const workPlace = {
   description: "Work",
   geometry: { location: { lat: 48.8496818, lng: 2.2940881 } },
 };
+
+const SaveData = [
+  {
+    description: "Thêm mới ",
+    name: "New",
+  },
+  {
+    description: "Thêm nhà ",
+    name: "Home",
+  },
+  {
+    description: "Thêm Công ty",
+    name: "Company",
+  },
+];
 
 const DestinationSearch = (props) => {
   const inputOriginRef = useRef(null);
@@ -267,6 +283,18 @@ const DestinationSearch = (props) => {
                 data={item}
                 handleSelectSuggestion={handleSelectSuggestion}
                 type={visible === "destination" ? "destination" : "origin"}
+              />
+            ))}
+          </View>
+        )}
+        {selectButton === 3 && (
+          <View style={styles.listView1}>
+            {SaveData?.map((item , index) => (
+              <PlaceRowSave
+                key={index}
+                data={item}
+                // handleSelectSuggestion={handleSelectSuggestion}
+                // type={visible === "destination" ? "destination" : "origin"}
               />
             ))}
           </View>
