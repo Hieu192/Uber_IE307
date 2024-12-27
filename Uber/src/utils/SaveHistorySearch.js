@@ -1,6 +1,4 @@
-import { getFirestore, doc, collection, addDoc, serverTimestamp, limit, orderBy, where, query, getDocs, updateDoc } from "firebase/firestore";
-
-// Tham khảo Firestore
+import { getFirestore, doc, collection, addDoc, serverTimestamp, limit, orderBy, where, query, getDocs, updateDoc, increment } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
 const saveSearchHistory = async (userId, searchData) => {
@@ -19,6 +17,7 @@ const saveSearchHistory = async (userId, searchData) => {
         const docRef = doc(db, "searchHistories", docId);
   
         await updateDoc(docRef, {
+          amount: increment(1),
           createdAt: serverTimestamp(), // Cập nhật thời gian
         });
   
@@ -28,6 +27,7 @@ const saveSearchHistory = async (userId, searchData) => {
             place_id: searchData.place_id,
             name: searchData.value,
             userId: userId,
+            amount: 1,
             createdAt: serverTimestamp(),
         });
         console.log("Lịch sử tìm kiếm đã được lưu!");

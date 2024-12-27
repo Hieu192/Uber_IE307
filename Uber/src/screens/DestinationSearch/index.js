@@ -8,6 +8,7 @@ import * as Location from "expo-location";
 import { use } from "react";
 import { useSelector } from "react-redux";
 import saveSearchHistory, { getSearchHistory } from "../../utils/SaveHistorySearch.js";
+import { getMostSearch, getMostSearchByUser } from "../../utils/suggestMap.js";
 const homePlace = {
   description: "Home",
   geometry: { location: { lat: 48.8152937, lng: 2.4597668 } },
@@ -37,7 +38,9 @@ const DestinationSearch = (props) => {
   const [visible, setVisible] = useState("");
   const [selectButton, setSelectButton] = useState(1);
   const [searchHistory, setSearchHistory] = useState();
-  console.log("searchHistory:::", searchHistory);
+  const [searchSuggest , setSearchSuggest] = useState();
+  const [searchSuggestAll, setSearchSuggestAll] = useState();
+  console.log("searchSuggestAll:::", searchSuggestAll);
   const navigation = useNavigation();
   const userId = useSelector((state) => state.auth.user_id);
   console.log("userId::", userId);
@@ -127,8 +130,26 @@ const DestinationSearch = (props) => {
       console.error("Lỗi khi lấy lịch sử tìm kiếm: ", error);
     }
   };
+  const fetchSearchSuggest = async () => {
+    try {
+      const dataSearchByUser = await getMostSearchByUser(userId); // Chờ kết quả từ hàm bất đồng bộ
+      setSearchSuggest(dataSearchByUser); // Cập nhật state với kết quả
+    } catch (error) {
+      console.error("Lỗi khi lấy lịch sử tìm kiếm 1: ", error);
+    }
+  };
+  const fetchSearchSuggestAll= async () => {
+    try {
+      const dataMostSearch = await getMostSearch(userId); // Chờ kết quả từ hàm bất đồng bộ
+      setSearchSuggestAll(dataMostSearch); // Cập nhật state với kết quả
+    } catch (error) {
+      console.error("Lỗi khi lấy lịch sử tìm kiếm 2: ", error);
+    }
+  };
   useEffect(() => {
     fetchSearchHistory();
+    fetchSearchSuggest();
+    fetchSearchSuggestAll();
     const fetchLocation = async () => {
       await getCurrentLocation();
     };
@@ -216,7 +237,7 @@ const DestinationSearch = (props) => {
                 selectButton === 3 && styles.selectButton]}>Đã lưu</Text>
           </TouchableOpacity>
         </View>
-        
+        {selectButton === 1 && (
           <View style={styles.listView1}>
             {searchHistory?.map((item , index) => (
               <PlaceRow
@@ -227,6 +248,29 @@ const DestinationSearch = (props) => {
               />
             ))}
           </View>
+        )}
+        {selectButton === 2 && (
+          <View style={styles.listView1}>
+          <Text style={{fontSize: 18, fontWeight: 600, marginTop: 8}}>Thường được sử dụng </Text>
+            {searchSuggest?.map((item , index) => (
+              <PlaceRow
+                key={index}
+                data={item}
+                handleSelectSuggestion={handleSelectSuggestion}
+                type={visible === "destination" ? "destination" : "origin"}
+              />
+            ))}
+            <Text style={{fontSize: 18, fontWeight: 600, marginTop: 8}}>Địa điểm phổ biến nhất </Text>
+            {searchSuggestAll?.map((item , index) => (
+              <PlaceRow
+                key={index}
+                data={item}
+                handleSelectSuggestion={handleSelectSuggestion}
+                type={visible === "destination" ? "destination" : "origin"}
+              />
+            ))}
+          </View>
+        )}
         </View>
         )}
         {(visible === "origin" && originInput ) && (
