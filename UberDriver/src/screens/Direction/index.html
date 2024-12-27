@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css"
+      type="text/css"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoicGh1Y2NhbzEyMyIsImEiOiJjbTRqODlueHMwYWx0MnFvazZiajk0NmtkIn0.AO_5CNYWhNB0Qu43ZMQ0tA";
+
+      const map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/mapbox/streets-v11",
+        center: [106.660172, 10.762622], // Vị trí trung tâm ban đầu (TP.HCM)
+        zoom: 15,
+        pitch: 45, // Góc nghiêng bản đồ
+        bearing: 0, // Hướng bản đồ
+      });
+
+      // Thêm các điều khiển Navigation
+      const nav = new mapboxgl.NavigationControl();
+      //map.addControl(nav);
+
+      // Khởi tạo Mapbox Directions
+      const directions = new MapboxDirections({
+        accessToken: mapboxgl.accessToken,
+        controls: { instructions: false }, // Ẩn danh sách hướng dẫn
+      });
+      map.addControl(directions, "top-left");
+
+      // Tạo phần tử đại diện cho phương tiện
+      const vehicleElement = document.createElement("div");
+      vehicleElement.style.width = "40px";
+      vehicleElement.style.height = "40px";
+      vehicleElement.style.backgroundImage =
+        "url('https://canto-wp-media.s3.amazonaws.com/app/uploads/2019/08/19194138/image-url-3.jpg')";
+      vehicleElement.style.backgroundSize = "cover";
+      vehicleElement.style.transformOrigin = "center";
+      vehicleElement.style.transform = "rotate(180deg)"; // Mũi tên luôn hướng lên
+
+      const vehicleMarker = new mapboxgl.Marker({ element: vehicleElement })
+        .setLngLat([106.660172, 10.762622])
+        .addTo(map);
+
+      // Giải mã chuỗi polyline
+      function decodePolyline(encoded) {
+        let points = [];
+        let index = 0;
+        let lat = 0,
+          lng = 0;
+        while (index < encoded.length) {
+          let shift = 0,
+            result = 0,
+            b;
+          do {
+            b = encoded.charCodeAt(index++) - 63;
+            result |= (b & 0x1f) << shift;
+            shift += 5;
+          } while (b >= 0x20);
+          const deltaLat = result & 1 ? ~(result >> 1) : result >> 1;
+          lat += deltaLat;
+          shift = 0;
+          result = 0;
+          do {
+            b = encoded.charCodeAt(index++) - 63;
+            result |= (b & 0x1f) << shift;
+            shift += 5;
+          } while (b >= 0x20);
+          const deltaLng = result & 1 ? ~(result >> 1) : result >> 1;
+          lng += deltaLng;
+          points.push([lng / 1e5, lat / 1e5]);
+        }
+        return points;
+      }
+      let polylineGeo=""
+      // Lắng nghe sự kiện 'route' để lấy thông tin về các tuyến đường và các bước điều hướng
+      directions.on("route", function (e) {
+        const routes = e.route[0];
+        //const fullCoordinates = decodePolyline(routes.geometry);
+        const fullCoordinates = decodePolyline(polylineGeo);
+        map.addSource('route', {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              geometry: {
+                type: 'LineString',
+                coordinates: fullCoordinates
+              }
+            }
+          });
+          
+          // Vẽ polyline trên bản đồ
+          map.addLayer({
+            id: 'route-layer',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#0095ff',  // Màu của đường
+              'line-width': 4           // Độ dày đường
+            }
+          });
+          //map.setLayoutProperty('route-layer', 'visibility', 'none');
+        const { steps, distance, duration } = routes.legs[0];
+        let index = 0;
+        // Mô phỏng di chuyển
+        const interval = setInterval(() => {
+          if (index < fullCoordinates.length - 1) {
+            const current = fullCoordinates[index];
+            const next = fullCoordinates[index + 1];
+            window.ReactNativeWebView.postMessage(
+              JSON.stringify({
+                current,
+              })
+            );
+
+            // Cập nhật vị trí mũi tên
+            vehicleMarker.setLngLat(current);
+
+            // Tính góc quay (bearing) theo hướng tuyến đường
+            const bearing =
+              Math.atan2(next[0] - current[0], next[1] - current[1]) *
+              (180 / Math.PI);
+
+            // Xoay bản đồ theo hướng di chuyển
+            map.easeTo({
+              center: current,
+              bearing: bearing,
+              zoom: 15,
+              pitch: 45,
+              duration: 1000,
+            });
+
+            index++;
+          } else {
+            clearInterval(interval); // Dừng mô phỏng khi hoàn tất lộ trình
+          }
+        }, 3000);
+
+        // Lưu intervalId để có thể clear sau này
+        window.intervalId = interval;
+
+        // Lắng nghe khoảng cách với các bước chỉ dẫn
+        let delay = 0;
+        const timeouts = [];
+
+        // Lưu tất cả các timeoutIds
+        window.timeoutIds = timeouts;
+      });
+
+      // Hàm để xóa tuyến đường và hủy các interval/setTimeout
+      function removeRoute() {
+        directions.removeRoutes();
+        clearInterval(window.intervalId); // Clear interval mô phỏng khi hủy tuyến đường
+        window.timeoutIds.forEach(clearTimeout); // Clear tất cả setTimeout
+      }
+     // window.ReactNativeWebView.postMessage(JSON.stringify({name:"fdkjfkds"}));
+      // Lắng nghe sự kiện từ React Native
+      function initMapWithData(origin, destination,polyline) {
+        console.log('Received origin:', origin);
+        console.log('Received destination:', destination);
+        polylineGeo=polyline;
+        directions.setOrigin(origin); // [longitude, latitude]
+        directions.setDestination(destination); // [longitude, latitude]
+        // Tiến hành khởi tạo Mapbox Directions với các dữ liệu này
+      }
+      window.removeRoute = removeRoute;
+    </script>
+  </body>
+</html>

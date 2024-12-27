@@ -1,5 +1,6 @@
 import React from "react";
 import HomeScreen from "../screens/HomeScreen";
+import DirectionScreen from "../screens/Direction/index";
 import { createStackNavigator } from '@react-navigation/stack'
 import { useNavigation } from "@react-navigation/native";
 import {TouchableOpacity} from "react-native"
@@ -19,6 +20,17 @@ const HomeStack = () => {
 				 		</TouchableOpacity>
 				 	),
 				 	title: "Home",
+				 	}}
+        />
+              <Stack.Screen name="Direction" 
+        component={DirectionScreen} 
+         options={{
+				 	headerLeft: () => (
+				 		<TouchableOpacity onPress={() => navigation.openDrawer()} >
+				 			<Icon name="bars" size={24} style={{marginHorizontal: 16}}/>
+				 		</TouchableOpacity>
+				 	),
+				 	title: "Direction",
 				 	}}
         />
     </Stack.Navigator>

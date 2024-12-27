@@ -13,15 +13,17 @@ import * as Location from "expo-location";
 import { useDispatch, useSelector } from "react-redux";
 import Notification from "../../components/Notification/index.js";
 import { updateLocation } from "../../redux/slices/app";
-const HomeScreen = () => {
-  console.log("----------------------------------------------------------------------------------")
+const HomeScreen = ({ navigation }) => {
+  console.log(
+    "----------------------------------------------------------------------------------"
+  );
   const dispatch = useDispatch();
   const [car, setCar] = useState(null);
   const [myPosition, setMyPosition] = useState(null);
   const [order, setOrder] = useState(null);
   const [newOrders, setNewOrders] = useState([]);
-  const { user_id,isLoggedIn } = useSelector((state) => state.auth);
-    const { notification_id } = useSelector((state) => state.app);
+  const { user_id, isLoggedIn } = useSelector((state) => state.auth);
+  const { notification_id, direction } = useSelector((state) => state.app);
   const requestLocationPermission = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status === "granted") {
@@ -84,7 +86,8 @@ const HomeScreen = () => {
   };
 
   const onGoPress = async () => {
-    // Update the car and set it to active
+    if (direction) navigation.navigate("Direction");
+    else Alert.alert("Thông báo", "Bạn chưa có chuyến xe!");
     try {
       // setCar(updatedCarData.data.updateCar);
     } catch (e) {
@@ -110,7 +113,7 @@ const HomeScreen = () => {
 
   return (
     <View>
-         {notification_id && isLoggedIn && <Notification />}
+      {notification_id && isLoggedIn && <Notification />}
 
       {myPosition && (
         <MapView
@@ -128,16 +131,6 @@ const HomeScreen = () => {
           }}
         ></MapView>
       )}
-
-      {/* <Pressable
-        onPress={() => console.warn('Balance')}
-        style={styles.balanceButton}>
-        <Text style={styles.balanceText}>
-          <Text style={{ color: 'green' }}>$</Text>
-          {' '}
-          0.00
-        </Text>
-      </Pressable> */}
       <Pressable onPress={onGoPress} style={styles.goButton}>
         <Text style={styles.goText}>{car?.isActive ? "END" : "GO"}</Text>
       </Pressable>
