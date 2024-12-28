@@ -45,7 +45,7 @@
       // Thêm các điều khiển Navigation
       const nav = new mapboxgl.NavigationControl();
       //map.addControl(nav);
-
+      //map.removeControl(nav); 
       // Khởi tạo Mapbox Directions
       const directions = new MapboxDirections({
         accessToken: mapboxgl.accessToken,
@@ -58,7 +58,7 @@
       vehicleElement.style.width = "40px";
       vehicleElement.style.height = "40px";
       vehicleElement.style.backgroundImage =
-        "url('https://canto-wp-media.s3.amazonaws.com/app/uploads/2019/08/19194138/image-url-3.jpg')";
+        "url('assets/arrow.png')";
       vehicleElement.style.backgroundSize = "cover";
       vehicleElement.style.transformOrigin = "center";
       vehicleElement.style.transform = "rotate(180deg)"; // Mũi tên luôn hướng lên
@@ -185,8 +185,6 @@
      // window.ReactNativeWebView.postMessage(JSON.stringify({name:"fdkjfkds"}));
       // Lắng nghe sự kiện từ React Native
       function initMapWithData(origin, destination,polyline) {
-        console.log('Received origin:', origin);
-        console.log('Received destination:', destination);
         polylineGeo=polyline;
         directions.setOrigin(origin); // [longitude, latitude]
         directions.setDestination(destination); // [longitude, latitude]

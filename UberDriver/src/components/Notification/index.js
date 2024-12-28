@@ -7,7 +7,7 @@ import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import getDistance from "../../utils/getDistance";
 const Notification = () => {
   const dispatch = useDispatch();
-  const { notification_id, ride, driver_location } = useSelector(
+  const { notification_id, ride, driver_location,order,timeForResponse } = useSelector(
     (state) => state.app
   );
   const { user_id } = useSelector(
@@ -35,13 +35,13 @@ const Notification = () => {
               )}{" "}
               km
             </Text>
-            <Text style={{ fontSize: 18 }}>Giá cước:</Text>
+            <Text style={{ fontSize: 18 }}>Giá cước:{order?.finalPrice}</Text>
           </View>
           <Text style={styles.message}>Vui lòng phản hồi trong</Text>
           <View>
             <CountdownCircleTimer
               isPlaying
-              duration={15} // Thời gian đếm ngược
+              duration={timeForResponse} // Thời gian đếm ngược
               colors={["#004777", "#F7B801", "#A30000", "#189d00"]}
               colorsTime={[10, 7, 5, 0]} // Màu sắc theo thời gian
               size={80}

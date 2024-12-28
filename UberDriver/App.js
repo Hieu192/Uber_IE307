@@ -35,12 +35,10 @@ const MainApp = () => {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1}}>
     <NavigationContainer>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
       {isLoggedIn ? <Router /> : <AuthStack />}
     </NavigationContainer>
-    </SafeAreaView>
   );
 };
 

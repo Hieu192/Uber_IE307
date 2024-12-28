@@ -31,7 +31,9 @@ const HomeStack = () => {
 				 		</TouchableOpacity>
 				 	),
 				 	title: "Direction",
-				 	}}
+					headerShown:false
+				 	}
+				}
         />
     </Stack.Navigator>
   );

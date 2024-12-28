@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Dimensions, Pressable } from "react-native";
+import { View, Text, Dimensions, Pressable,Linking,Button  } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import Entypo from "react-native-vector-icons/Entypo";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import styles from "./styles.js";
 import NewOrderPopup from "../../components/NewOrderPopup";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -68,22 +67,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     listenToNotifications(user_id, dispatch);
     requestLocationPermission();
-
-    //fetchCar();
-    //fetchOrders();
   }, []);
-
-  const onDecline = () => {
-    //setNewOrders(newOrders.slice(1));
-  };
-
-  const onAccept = async (newOrder) => {
-    try {
-      //setOrder(orderData.data.updateOrder);
-    } catch (e) {}
-
-    // setNewOrders(newOrders.slice(1));
-  };
 
   const onGoPress = async () => {
     if (direction) navigation.navigate("Direction");
@@ -110,11 +94,9 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const getDestination = () => {};
-
   return (
     <View>
       {notification_id && isLoggedIn && <Notification />}
-
       {myPosition && (
         <MapView
           style={{

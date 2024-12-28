@@ -1,12 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
-import { StyleSheet, View, Button, Text, Dimensions } from "react-native";
+import { StyleSheet, View, Button, Text, Dimensions, Pressable,Linking } from "react-native";
 import { WebView } from "react-native-webview";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
-import axios from "axios";
 import { useSelector } from "react-redux";
-import MapView, { Polyline as RNPolyline, Marker } from "react-native-maps";
-const { width } = Dimensions.get("window");
+
 
 const MapboxNavigation = ({navigation}) => {
   const webviewRef = useRef(null);
@@ -57,15 +56,7 @@ const MapboxNavigation = ({navigation}) => {
   }
   // Hàm xử lý chỉ dẫn
   function updateInstructions(current, steps) {
-    // console.log("tọa độ ",current)
-    // console.log()
-    // console.log("step là",steps)
     let distance = 0;
-    // console.log("cur 1",current[1])
-    // console.log("cur 0",current[0])
-    // console.log("step lat", step.start_location.lat)
-    // console.log("step lng", step.start_location.lng)
-    console.log(steps.length);
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
       distance = calculateDistance(
@@ -79,14 +70,12 @@ const MapboxNavigation = ({navigation}) => {
         //console.log("còn cách xa vị trí rẽ")
       }
       if (distance < 250 && distance > previousRemainDistance) {
-        console.log("không thỏa mãn", distance);
         setPreviousRemainDistance(distance);
         setTurn("straight");
         setRemainDistance(0);
         break;
       }
       if (distance < 200 && distance <= previousRemainDistance) {
-        console.log("thỏa mãn");
         setInstruction(step.html_instructions);
         setTurn(step.maneuver);
         setRemainDistance(distance.toFixed(0));
@@ -94,10 +83,12 @@ const MapboxNavigation = ({navigation}) => {
         break; // Dừng kiểm tra, ưu tiên ngã rẽ gần nhất
       }
     }
-    console.log("distance là", distance);
   }
+  const makePhoneCall = () => {
+    const phoneNumber = 'tel:+0842240800'; // Thay bằng số điện thoại bạn muốn gọi
+    Linking.openURL(phoneNumber);
+  };
   useEffect(() => {
-    console.log("khỏi tạo");
     setDistance(direction.legs[0].distance.text);
     setDuration(direction.legs[0].duration.text);
   }, []);
@@ -113,13 +104,22 @@ const MapboxNavigation = ({navigation}) => {
          const destination = [${direction.legs[0].end_location.lng},${direction.legs[0].end_location.lat}];
          const polyline="${direction.overview_polyline.points}";
           window.initMapWithData(origin, destination,polyline); // Gọi hàm trong HTML để khởi tạo dữ liệu
+              // Tìm và ẩn thanh điều khiển "Traffic, Driving, Cycling"
+    const controlElement = document.querySelector('.mapboxgl-ctrl-mapbox-traffic');
+    if (controlElement) {
+      controlElement.style.display = 'none'; // Ẩn phần tử
+    }
+
+    // Tìm và ẩn các điều khiển khác nếu cần thiết
+    const otherControlElement = document.querySelector('.mapboxgl-ctrl');
+    if (otherControlElement) {
+      otherControlElement.style.display = 'none'; // Ẩn các điều khiển khác
+    }
         `}
         onMessage={(event) => {
           const data = event.nativeEvent.data;
           const { current } = JSON.parse(data);
           updateInstructions(JSON.parse(data).current, direction.legs[0].steps);
-
-          //console.log("Dữ liệu nhận được từ WebView:", JSON.parse(data));
         }}
       />
       <View style={styles.directionContainer}>
@@ -154,6 +154,11 @@ const MapboxNavigation = ({navigation}) => {
           </Text>
         </View>
       </View>
+      <Pressable onPress={makePhoneCall} style={{position:"absolute",bottom:150,right:20}}>
+        <View style={{ backgroundColor: "#1ba300",  borderRadius: 35,width:70,height:70,alignItems:"center",justifyContent:"center", }}>
+        <Entypo name="phone" size={40} color="white" />
+        </View>
+      </Pressable>
       <Button
         title="Dừng mô phỏng"
         onPress={() => {
@@ -170,6 +175,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     width: "100%",
+    position: "relative",
   },
   directionContainer: {
     backgroundColor: "rgba(255, 255, 255, 0)",
