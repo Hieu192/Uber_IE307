@@ -75,6 +75,10 @@ const FindDriver = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+        if(!isLoading){
+          navigation.dispatch(e.data.action); 
+          return 1;
+        }
         if (!backPressHandled) {
           e.preventDefault(); // Ngừng hành động quay lại mặc định
           Alert.alert(
