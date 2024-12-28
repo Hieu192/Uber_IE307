@@ -19,7 +19,7 @@ import CancelTrip from "../../utils/CancelTrip";
 import { Avatar } from "react-native-elements";
 import MapFindDriver from "./MapFindDriver";
 import { use } from "react";
-import createOrder from "../../utils/checkout";
+import createOrder, { updateOrder } from "../../utils/checkout";
 const FindDriver = ({ navigation }) => {
   const dispatch = useDispatch();
   const { isLoading, ride, driver } = useSelector((state) => state.app);
@@ -40,6 +40,7 @@ const FindDriver = ({ navigation }) => {
   applyIdSelect
   } = useSelector((state) => state.method);
   const driverId = useSelector((state) => state.app.driver_id);
+  const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
      //deleteDocuments('rides', 10);
@@ -98,10 +99,9 @@ const FindDriver = ({ navigation }) => {
       };
     }, [navigation, backPressHandled]) // Thêm backPressHandled vào dependency array
   );
-  useEffect(() => {
-    if (!isLoading) {
-      createOrder({
-        driverId: driverId,
+  const fetchCreateOrder = async () => {
+    try {
+      const orderData = createOrder({
         userId: ride.user_id,
         originalPrice: idSelect === applyIdSelect ? applyPrice : price,
         discountCode: idSelect === applyIdSelect ? applyDiscountCode : null,
@@ -109,9 +109,34 @@ const FindDriver = ({ navigation }) => {
         status: "pending",
         rideId: ride.id,
         paymentMethod: method,
-      })
+      });
+      setOrderId(orderData.id);
+    } catch (error) {
+      console.error("Lỗi khi tạo hóa đơn: ", error);
+      throw new Error("Không thể tạo hóa đơn, vui lòng thử lại!");
     }
-  }), [isLoading]
+  };
+  const fetchUpdateOrder = async () => {
+    try {
+      const orderData = updateOrder({
+        driverId: driverId,
+        orderId: orderId,
+      });
+      setOrderId(orderData.id);
+    } catch (error) {
+      console.error("Lỗi khi tạo hóa đơn: ", error);
+      throw new Error("Không thể tạo hóa đơn, vui lòng thử lại!");
+    }
+  };
+
+  useEffect(() => {
+    fetchCreateOrder();
+  }), []
+  useEffect(() => {
+    if (!isLoading && driverId) {
+      fetchUpdateOrder();
+    }
+  }), [isLoading, driverId]
   return (
     <View style={styles.container}>
       {/* {!isLoading && createOrder({
