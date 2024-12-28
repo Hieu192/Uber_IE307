@@ -2,7 +2,6 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig"; // Đường dẫn đến file cấu hình Firebase
 
 const createOrder = async ({
-  driverId,
   userId,
   originalPrice,
   discountCode,
@@ -12,11 +11,10 @@ const createOrder = async ({
 }) => {
   try {
     const orderData = {
-      driverId: driverId, // Gán null nếu không có tài xế
       userId: userId,
       rideId: rideId,
       originalPrice: originalPrice,
-      discountCode: discountCode, // Gán null nếu không có mã giảm giá
+      discountCode: discountCode || null, 
       finalPrice: finalPrice,
       status: "pending", // Ví dụ: "paid", "pending", "canceled"
       paymentMethod: paymentMethod, // Ví dụ: "Credit Card", "Cash", "E-Wallet"
@@ -31,6 +29,24 @@ const createOrder = async ({
   } catch (error) {
     console.error("Lỗi khi tạo hóa đơn: ", error);
     throw new Error("Không thể tạo hóa đơn, vui lòng thử lại!");
+  }
+};
+
+export const updateOrder = async ({
+  driverId,
+  orderId,
+}) => {
+  try {
+    const orderRef = doc(db, "orders", orderId);
+    const updatedData = { driverId };
+    console.log("Đang cập nhật hóa đơn với ID:", orderId, "và dữ liệu:", updatedData);
+
+    await updateDoc(orderRef, updatedData); // Cập nhật dữ liệu
+    console.log("Hóa đơn đã được cập nhật thành công!");
+    return { id: orderId, ...updatedData };
+  } catch (error) {
+    console.error("Lỗi khi cập nhật hóa đơn: ", error);
+    throw new Error("Không thể cập nhật hóa đơn, vui lòng thử lại!");
   }
 };
 
