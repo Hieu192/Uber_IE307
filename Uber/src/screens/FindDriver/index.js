@@ -106,7 +106,7 @@ const FindDriver = ({ navigation }) => {
       return () => {
         unsubscribe(); // Cleanup navigation listener
       };
-    }, [navigation, backPressHandled]) // Thêm backPressHandled vào dependency array
+    }, [navigation, backPressHandled,isLoading]) // Thêm backPressHandled vào dependency array
   );
   const fetchCreateOrder = async () => {
     try {
