@@ -9,7 +9,10 @@ import {
   BackHandler,
   Modal,
   TouchableWithoutFeedback,
+  Pressable,
+  Linking,
 } from "react-native";
+import Entypo from "react-native-vector-icons/Entypo";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
 import CreateRide, { deleteDocuments } from "../../utils/CreateRide";
 import { useSelector, useDispatch } from "react-redux";
@@ -29,23 +32,23 @@ const FindDriver = ({ navigation }) => {
   const [modalĐriverVisible, setModalDriverVisible] = useState(true);
   const [backPressHandled, setBackPressHandled] = useState(false); // Thêm state để theo dõi nếu đã nhấn nút back
   const {
-  method,
-  price,
-  discount,
-  idSelect,
-  applyPrice,
-  applyDiscount,
-  applyFinalPrice,
-  applyDiscountCode,
-  applyIdSelect
+    method,
+    price,
+    discount,
+    idSelect,
+    applyPrice,
+    applyDiscount,
+    applyFinalPrice,
+    applyDiscountCode,
+    applyIdSelect,
   } = useSelector((state) => state.method);
   const driverId = useSelector((state) => state.app.driver_id);
   const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
-     //deleteDocuments('rides', 10);
-     //deleteDocuments('notifications', 20);
-   // CreateRide(originPlace.value, destinationPlace.value, dispatch);
+    //deleteDocuments('rides', 10);
+    //deleteDocuments('notifications', 20);
+    // CreateRide(originPlace.value, destinationPlace.value, dispatch);
   }, []);
 
   const showAlert = () => {
@@ -128,15 +131,20 @@ const FindDriver = ({ navigation }) => {
       throw new Error("Không thể tạo hóa đơn, vui lòng thử lại!");
     }
   };
-
+  const makePhoneCall = () => {
+    const phoneNumber = "tel:+0842240800"; // Thay bằng số điện thoại bạn muốn gọi
+    Linking.openURL(phoneNumber);
+  };
   useEffect(() => {
     fetchCreateOrder();
-  }), []
+  }),
+    [];
   useEffect(() => {
     if (!isLoading && driverId) {
       fetchUpdateOrder();
     }
-  }), [isLoading, driverId]
+  }),
+    [isLoading, driverId];
   return (
     <View style={styles.container}>
       {/* {!isLoading && createOrder({
@@ -150,48 +158,68 @@ const FindDriver = ({ navigation }) => {
         paymentMethod: method,
       })} */}
       {!isLoading ? (
-        <Modal
-          animationType="slide" // Kiểu animation: 'slide', 'fade', hoặc 'none'
-          transparent={true} // Cho phép modal hiển thị trong suốt
-          visible={modalĐriverVisible}
-          onRequestClose={() => setModalDriverVisible(false)}
-        >
-          <TouchableWithoutFeedback
-            onPress={() => {
-              setModalDriverVisible(false);
-            }}
+        <View style={{ flex: 1, width: Dimensions.get("window").width }}>
+          <MapFindDriver origin={originPlace} />
+          <Pressable
+            onPress={makePhoneCall}
+            style={{ position: "absolute", bottom: 50, right: 20 }}
           >
-            <View style={styles.modalContainer}>
-              <View style={styles.modalView}>
-                <Avatar
-                  rounded
-                  size="large"
-                  source={{
-                    uri: "https://randomuser.me/api/portraits/men/41.jpg",
-                  }}
-                />
-                <Text style={styles.modalText}>
-                  Tài xế {driver?.fullname} đã nhận chuyến xe của bạn
-                </Text>
-                <Text style={styles.modalText}>
-                  Biển số {driver?.license_plate}
-                </Text>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => {
-                    setModalDriverVisible(false);
-                  }}
-                >
-                  <Text style={styles.textStyle}>Đóng</Text>
-                </TouchableOpacity>
-              </View>
+            <View
+              style={{
+                backgroundColor: "#1ba300",
+                borderRadius: 35,
+                width: 70,
+                height: 70,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Entypo name="phone" size={40} color="white" />
             </View>
-          </TouchableWithoutFeedback>
-        </Modal>
+          </Pressable>
+          <Modal
+            animationType="slide" // Kiểu animation: 'slide', 'fade', hoặc 'none'
+            transparent={true} // Cho phép modal hiển thị trong suốt
+            visible={modalĐriverVisible}
+            onRequestClose={() => setModalDriverVisible(false)}
+          >
+            <TouchableWithoutFeedback
+              onPress={() => {
+                setModalDriverVisible(false);
+              }}
+            >
+              <View style={styles.modalContainer}>
+                <View style={styles.modalView}>
+                  <Avatar
+                    rounded
+                    size="large"
+                    source={{
+                      uri: "https://randomuser.me/api/portraits/men/41.jpg",
+                    }}
+                  />
+                  <Text style={styles.modalText}>
+                    Tài xế {driver?.fullname} đã nhận chuyến xe của bạn
+                  </Text>
+                  <Text style={styles.modalText}>
+                    Biển số {driver?.license_plate}
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={() => {
+                      setModalDriverVisible(false);
+                    }}
+                  >
+                    <Text style={styles.textStyle}>Đóng</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+        </View>
       ) : (
-        <View style={{ flex: 1, width: Dimensions.get("window").width, }}>
-          <View style={{ flex: 4 , width: Dimensions.get("window").width, }}>
-            <MapFindDriver origin={originPlace}/>
+        <View style={{ flex: 1, width: Dimensions.get("window").width }}>
+          <View style={{ flex: 4, width: Dimensions.get("window").width }}>
+            <MapFindDriver origin={originPlace} />
           </View>
           <View style={styles.container1}>
             <Text style={{ fontSize: 20 }}>
@@ -255,18 +283,18 @@ const FindDriver = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1 ,
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
   },
-  container1 : {
+  container1: {
     flex: 1,
     width: Dimensions.get("window").width,
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
-    backgroundColor: 'white'
+    backgroundColor: "white",
   },
   spinnerTextStyle: {
     color: "#1fff1f",
