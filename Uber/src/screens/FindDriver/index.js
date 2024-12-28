@@ -44,6 +44,8 @@ const FindDriver = ({ navigation }) => {
   } = useSelector((state) => state.method);
   const driverId = useSelector((state) => state.app.driver_id);
   const [orderId, setOrderId] = useState(null);
+  console.log("Driver ID: ", driverId);
+  console.log("Order ID: ", orderId);
 
   useEffect(() => {
     //deleteDocuments('rides', 10);
@@ -104,7 +106,8 @@ const FindDriver = ({ navigation }) => {
   );
   const fetchCreateOrder = async () => {
     try {
-      const orderData = createOrder({
+      console.log("đang fetch create order");
+      const orderData = await createOrder({
         userId: ride.user_id,
         originalPrice: idSelect === applyIdSelect ? applyPrice : price,
         discountCode: idSelect === applyIdSelect ? applyDiscountCode : null,
@@ -125,7 +128,7 @@ const FindDriver = ({ navigation }) => {
         driverId: driverId,
         orderId: orderId,
       });
-      setOrderId(orderData.id);
+      console.log("Update Order Data: ", orderData);
     } catch (error) {
       console.error("Lỗi khi tạo hóa đơn: ", error);
       throw new Error("Không thể tạo hóa đơn, vui lòng thử lại!");
@@ -136,15 +139,16 @@ const FindDriver = ({ navigation }) => {
     Linking.openURL(phoneNumber);
   };
   useEffect(() => {
-    fetchCreateOrder();
-  }),
-    [];
+    if (!orderId) {
+      fetchCreateOrder();
+    }
+  }),[];
   useEffect(() => {
-    if (!isLoading && driverId) {
+    if (!isLoading && driverId && orderId) {
       fetchUpdateOrder();
     }
   }),
-    [isLoading, driverId];
+    [isLoading, driverId,orderId];
   return (
     <View style={styles.container}>
       {/* {!isLoading && createOrder({
